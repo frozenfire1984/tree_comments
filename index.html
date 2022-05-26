@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    :root {
+      --margin_delta: 15px;
+    }
+
+    .comment {
+      display: grid;
+      grid-template-columns: min-content min-content 1fr;
+      grid-template-areas: "id author time"
+                           "body body body"
+                           "form form form";
+      gap: 5px;
+      padding-block: 5px;
+      border-bottom: 1px hsla(0, 0%, 0%, .2) solid;
+    }
+
+    .comment:last-child {
+      border-bottom: none;
+    }
+
+    .comment .comment__id {
+      grid-area: id;
+      align-self: start;
+      font-size: .8em;
+    }
+
+    .comment .comment__author {
+      grid-area: author;
+    }
+
+    .comment .comment__time-holder {
+      grid-area: time;
+    }
+
+    .comment .comment__body {
+      grid-area: body;
+    }
+
+    .comment .comment__form {
+      grid-area: form;
+    }
+
+    .comment.comment_deep_2 {
+      margin-left: var(--margin_delta);
+    }
+
+    .comment.comment_deep_3 {
+      margin-left: calc(var(--margin_delta) * 2);
+    }
+
+    .comment.comment_deep_4 {
+      margin-left: calc(var(--margin_delta) * 3);
+    }
+
+    .comment.comment_deep_5 {
+      margin-left: calc(var(--margin_delta) * 4);
+    }
+
+    .comment.comment_deep_6 {
+      margin-left: calc(var(--margin_delta) * 5);
+    }
+
+    .comment.comment_deep_7 {
+      margin-left: calc(var(--margin_delta) * 6);
+    }
+
+    .form-main {
+      margin-top: 20px;
+      padding: 10px 5px;
+    }
+
+    .form-main .form-main__input,
+    .form-main .form-main__submit{
+      font-size: 17px;
+    }
+  </style>
+</head>
+<body>
+
+<article>
+  <h1>Some article</h1>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus deserunt est, illo iste nemo reprehenderit saepe
+    vero voluptates? Ad aut commodi distinctio, magni numquam omnis quod ratione unde voluptate! Pariatur!</p>
+  <p>Atque distinctio earum, fugiat in laborum libero quis saepe. Eaque iure iusto maiores molestiae officia rerum
+    voluptates? A nulla optio pariatur recusandae soluta temporibus? At excepturi expedita officia saepe suscipit!</p>
+  <p>A, aperiam, aspernatur distinctio ducimus esse facilis incidunt, iusto natus neque numquam officia perferendis quae
+    quis reiciendis reprehenderit soluta veritatis. Adipisci asperiores distinctio dolorum ipsam, iure molestiae non
+    quibusdam quis.</p>
+</article>
+<hr/>
+<div id="comments"></div>
+<hr/>
+<form id="form-main" class="form-main" action="">
+  <label>
+    <input name="comment_value" class="form-main__input" type="text" placeholder="your comment" maxlength="100"/>
+  </label>
+  <button class="form-main__submit" type="submit" id="form-main_submit">send comment</button>
+</form>
+
+<template id="template_comments">
+  <div class="comment">
+    <div class="comment__id"></div>
+    <div class="comment__author"></div>
+    <div class="comment__time-holder">
+      <span class="comment__time-title">Time:</span>
+      <span class="comment__time"></span>
+    </div>
+    <div class="comment__body"></div>
+    <form class="comment__form" action="">
+      <label>
+        <input name="comment_value" class="comment__input" type="text" placeholder="your comment" maxlength="100"/>
+      </label>
+      <input name="comment_owner" class="comment__owner" value="" type="hidden"/>
+      <button class="comment__submit" type="submit">reply</button>
+    </form>
+  </div>
+</template>
+
+<script src="script.js"></script>
+</body>
+</html>
