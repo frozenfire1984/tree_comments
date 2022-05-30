@@ -21,23 +21,30 @@
 <hr/>
 <div id="comments"></div>
 <hr/>
-<form id="form-main" class="form-main comment__form" action="">
-  <input
-    name="comment_author"
-    class="comment__input comment__input_author form-main__input"
-    type="text"
-    placeholder="your name"
-    maxlength="30"
+
+<div class="primary-form">
+  <form id="form-main" class="form-main comment__form" action="">
+    <input
+      name="comment_author"
+      class="comment__input comment__input_author form-main__input"
+      type="text"
+      placeholder="your name"
+      maxlength="30"
     />
-  <textarea
-    name="comment_value"
-    class="comment__input comment__input_body form-main__input"
-    placeholder="your comment"
-    maxlength="100"
-    required></textarea>
-  <button class="comment__submit form-main__submit" type="submit" id="form-main_submit">send comment</button>
+    <textarea
+      name="comment_value"
+      class="comment__input comment__input_body form-main__input"
+      placeholder="your comment"
+      maxlength="100"
+      required></textarea>
+
+    <button
+      class="comment__submit form-main__submit"
+      type="submit"
+      id="form-main_submit">send comment</button>
+  </form>
   <div class="comment__status"></div>
-</form>
+</div>
 
 <template id="template_comments">
   <div class="comment">
@@ -80,8 +87,9 @@
       </form>
     </details>
     <div class="comment__status"></div>
+    <!--<div class="comment__slot"></div>-->
   </div>
 </template>
-<script src="script.js"></script>
+<script src="js/script.js" type="module"></script>
 </body>
 </html>

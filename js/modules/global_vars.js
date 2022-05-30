@@ -1,0 +1,1 @@
+export const comments_tag = document.querySelector("#comments")

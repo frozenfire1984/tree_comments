@@ -161,8 +161,8 @@
   margin-left: calc(var(--margin_delta) * 6);
 }
 
-.form-main {
-  min-height: 50px;
+.primary-form {
+  min-height: 150px;
   margin-top: 20px;
   padding: 10px 5px;
 }
