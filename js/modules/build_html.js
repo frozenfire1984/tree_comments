@@ -38,7 +38,7 @@ export const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 	id_tag.textContent = obj.id
 	author_tag.textContent = obj.author
 	//time_tag.setAttribute("data-timestamp", obj.time)
-	time_tag.textContent = new Date(obj.time).toLocaleString()
+	time_tag.textContent = new Date(parseInt(obj.time)).toLocaleString()
 	body_tag.textContent = obj.body
 	owner_h_tag.value = obj.id
 	owner_depth_h_tag.value = depth
@@ -56,8 +56,6 @@ export const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 			}
 		)
 	}
-	
-	//root_tag.setAttribute("data-owner", owner_id)
 	
 	if (dynamic) {
 		root_tag.classList.add("comment_new")

@@ -1,6 +1,7 @@
+import {backend_url_base} from './global_vars.js'
 import {build_html_func} from './build_html.js'
 
-let temp_id = 1000
+//let temp_id = 1000 //for demo data testing
 
 export const send_comment_func = (e, mode) => {
 	e.preventDefault()
@@ -21,27 +22,88 @@ export const send_comment_func = (e, mode) => {
 	status_tag.textContent = "...sending..."
 	
 	const payload = new FormData(form_tag)
-	/*payload.forEach((item, key) => {
+	payload.append("time", new Date().getTime().toString())
+	if (!payload.get("comment_author").trim().length) {
+		payload.set("comment_author", "anonimus")
+	}
+	
+	if (!payload.has("comment_owner")) {
+		payload.set("comment_owner", "")
+	}
+	
+	payload.forEach((item, key) => {
 		console.log(`payload key: ${key}`)
 		console.log(`payload value: ${item}`)
-	})*/
+	})
 	
-	const payload_for_output = {}
-	for (let pair of payload.entries()) {
-		payload_for_output[pair[0]] = pair[1]
-	}
+	const send_data = fetch(`${backend_url_base}/insert.php`, {
+			method: "POST",
+			body: payload
+	})
 	
-	const data_for_output = {
-		author: payload_for_output.comment_author ? payload_for_output.comment_author : "anonimus",
-		body: payload_for_output.comment_value,
-		id: temp_id++,
-		owner: mode.mode === "primary" ? 1 : payload_for_output.comment_owner,
-		time: new Date().getTime(),
-	}
+	send_data
+		.then(resp => {
+			return new Promise((resolve, reject) => {
+				resp.json()
+				.then((data) => resolve(data))
+				.catch((err) => reject(new Error("error while json parsing!")))
+			})
+		})
+		.then((data) => {
+			if (data.id) {
+				status_tag.classList.add("comment__status_sus")
+				status_tag.textContent = "commend send successfully"
+				
+				const data_for_output = {
+					id: data.id,
+					author: payload.get("comment_author"),
+					body: payload.get("comment_value"),
+					owner: payload.get("comment_owner"),
+					time: payload.get("time"),
+				}
+				
+				if (mode.mode === "primary") {
+					build_html_func(data_for_output, 1, null, true)
+				}
+				
+				if (mode.mode === "tree") {
+					build_html_func(data_for_output, parseInt(payload.get("comment_owner_depth")) + 1, payload.get("comment_owner"), true)
+				}
+				
+				input_tags.forEach((tag) => {
+					tag.value = ""
+				})
+				
+				setTimeout(() => {
+					status_tag.style.opacity = 0
+				}, 2000)
+				setTimeout(() => {
+					
+					status_tag.classList.remove("comment__status_sus")
+					status_tag.textContent = ""
+				}, 3000)
+				return
+			}
+			
+			throw new Error(data.error)
+		})
+		.catch((err) => {
+			console.error(err)
+			status_tag.classList.add("comment__status_err")
+			status_tag.textContent = err
+			setTimeout(() => {
+				status_tag.style.opacity = 0
+			}, 2000)
+			setTimeout(() => {
+				status_tag.classList.remove("comment__status_err")
+				status_tag.textContent = ""
+			}, 3000)
+		})
 	
-	const send_data = new Promise((resolve, reject) => {
+	/*simulate fetch from server api*/
+	/*const send_data = new Promise((resolve, reject) => {
 		return setTimeout(() => {
-			resolve(200)
+			resolve(temp_id++)
 			//reject(new Error("failed while sending"))
 		}, 2000)
 	})
@@ -53,12 +115,22 @@ export const send_comment_func = (e, mode) => {
 		status_tag.classList.add("comment__status_sus")
 		status_tag.textContent = "commend send successfully"
 		
+		const data_for_output = {
+			id: data,
+			author: payload.get("comment_author"),
+			body: payload.get("comment_value"),
+			owner: payload.get("comment_owner"),
+			time: payload.get("time"),
+		}
+		
+		console.log(data_for_output)
+		
 		if (mode.mode === "primary") {
 			build_html_func(data_for_output, 1, null, true)
 		}
 		
 		if (mode.mode === "tree") {
-			build_html_func(data_for_output, parseInt(payload_for_output.comment_owner_depth) + 1, payload_for_output.comment_owner, true)
+			build_html_func(data_for_output, parseInt(payload.get("comment_owner_depth")) + 1, payload.get("comment_owner"), true)
 		}
 		
 		input_tags.forEach((tag => {
@@ -69,12 +141,10 @@ export const send_comment_func = (e, mode) => {
 			status_tag.style.opacity = 0
 		}, 2000)
 		setTimeout(() => {
-			
-			/*if (mode.mode === "tree") {
+			/!*if (mode.mode === "tree") {
 				const details_tag = form_tag.closest(".comment").querySelector(".comment__details")
 				details_tag.open = false
-			}*/
-			
+			}*!/
 			status_tag.classList.remove("comment__status_sus")
 			status_tag.textContent = ""
 		}, 3000)
@@ -90,5 +160,5 @@ export const send_comment_func = (e, mode) => {
 			status_tag.classList.remove("comment__status_err")
 			status_tag.textContent = ""
 		}, 3000)
-	})
+	})*/
 }
