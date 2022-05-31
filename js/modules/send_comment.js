@@ -54,12 +54,11 @@ export const send_comment_func = (e, mode) => {
 		status_tag.textContent = "commend send successfully"
 		
 		if (mode.mode === "primary") {
-			build_html_func(data_for_output, 1, 1, mode)
+			build_html_func(data_for_output, 1, null, true)
 		}
 		
 		if (mode.mode === "tree") {
-			//console.log(payload_for_output.comment_owner_depth)
-			build_html_func(data_for_output, parseInt(payload_for_output.comment_owner_depth) + 1, payload_for_output.comment_owner, mode)
+			build_html_func(data_for_output, parseInt(payload_for_output.comment_owner_depth) + 1, payload_for_output.comment_owner, true)
 		}
 		
 		input_tags.forEach((tag => {
@@ -71,10 +70,10 @@ export const send_comment_func = (e, mode) => {
 		}, 2000)
 		setTimeout(() => {
 			
-			if (mode.mode === "tree") {
+			/*if (mode.mode === "tree") {
 				const details_tag = form_tag.closest(".comment").querySelector(".comment__details")
 				details_tag.open = false
-			}
+			}*/
 			
 			status_tag.classList.remove("comment__status_sus")
 			status_tag.textContent = ""

@@ -11,14 +11,23 @@
   position: relative;
   display: grid;
   grid-template-columns: max-content max-content 1fr;
-  grid-template-areas: "id author time"
-                           "body body body"
-                           "form form form";
+  grid-template-areas:
+    "id author time"
+    "body body body"
+    "details details details"
+    "status status status"
+    "slot slot slot"
+;
   row-gap: 5px;
   column-gap: 15px;
   padding-block: 5px;
-  border: 1px transparent solid;
+  border: 1px hsl(0, 0%, 80%) solid;
+  padding: 10px;
   transition: all 1s linear;
+}
+
+.comment ~ .comment {
+  margin-top: -1px;
 }
 
 .comment.comment_new {
@@ -26,11 +35,15 @@
   box-shadow: inset var(--color-new) 0 0 3px 3px;
 }
 
+.comment .comment {
+  padding-left: 30px;
+}
+
 .comment [class*="icon-"] {
   opacity: .5;
 }
 
-.comment::after {
+/*.comment::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -42,7 +55,7 @@
 
 .comment:last-child::after {
   content: none;
-}
+}*/
 
 .comment .comment__id-holder {
   grid-area: id;
@@ -68,7 +81,7 @@
 }
 
 .comment .comment__details {
-  grid-area: form;
+  grid-area: details;
 }
 
 .comment .comment__details > .comment__details-summary {
@@ -121,6 +134,7 @@
 }
 
 .comment__status {
+  grid-area: status   ;
   margin-top: 5px;
   transition: opacity 1s linear;
 }
@@ -134,10 +148,20 @@
 }
 
 .comment__status:empty {
-  display: none;
+  display: contents;
 }
 
-.comment.comment_depth_2 {
+.comment .comment__slot {
+  grid-area: slot;
+}
+
+.comment .comment__slot:empty {
+  display: contents;
+}
+
+
+
+/*.comment.comment_depth_2 {
   margin-left: var(--margin_delta);
 }
 
@@ -159,7 +183,7 @@
 
 .comment.comment_depth_7 {
   margin-left: calc(var(--margin_delta) * 6);
-}
+}*/
 
 .primary-form {
   min-height: 150px;
