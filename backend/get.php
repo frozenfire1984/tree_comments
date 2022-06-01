@@ -4,6 +4,7 @@ header('Content-type: application/json; charset=utf-8');
 
 try {
     require_once("connect.php");
+    
     $sql = "SELECT * FROM comments";
     $result = mysqli_query($link, $sql);
 

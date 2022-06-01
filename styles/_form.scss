@@ -1,0 +1,38 @@
+.form-wrapper {
+  min-height: 150px;
+  margin-top: 20px;
+  padding: 10px 5px;
+}
+
+.form {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  max-width: 500px;
+  padding-top: 5px;
+
+  .input:required:invalid ~ .submit {
+    pointer-events: none;
+    opacity: .5;
+  }
+
+  .input_author {
+    flex-grow: 1;
+  }
+
+  .input_body {
+    flex-grow: 2;
+    height: 60px;
+    resize: none;
+  }
+
+  &#{&}_main {
+    max-width: 700px;
+
+    .input, .submit {
+      font-size: 17px;
+    }
+  }
+}
+

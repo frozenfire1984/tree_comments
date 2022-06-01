@@ -1,0 +1,16 @@
+.status {
+  margin-top: 5px;
+  transition: opacity 1s linear;
+
+  &#{&}_sus {
+    color: green;
+  }
+
+  &#{&}_err {
+    color: red;
+  }
+
+  &:empty {
+    display: none;
+  }
+}

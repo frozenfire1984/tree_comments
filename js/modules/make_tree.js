@@ -1,6 +1,6 @@
-import {build_html_func} from './build_html.js'
+import build_html_func from './build_html.js'
 
-export const make_tree_func = (obj) => {
+const make_tree_func = (obj) => {
 	let queue = [null]
 	let comments = JSON.parse(JSON.stringify(obj))
 	comments.sort((a, b) => a.time - b.time);
@@ -29,3 +29,5 @@ export const make_tree_func = (obj) => {
 		}
 	}
 }
+
+export default make_tree_func

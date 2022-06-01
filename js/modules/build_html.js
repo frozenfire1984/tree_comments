@@ -1,10 +1,9 @@
-import {comments_tag} from './global_vars.js'
-import {send_comment_func} from './send_comment.js'
+import {comments_tag, max_depth} from './global_vars.js'
+import send_comment_func from './send_comment.js'
 
-const max_depth = 6
-const new_status_timeout = 5000
+const new_status_timeout = 7000
 
-export const build_html_func = (obj, depth, owner_id, dynamic = false) => {
+const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 	const template_tag_content = document.querySelector("#template_comments").content.cloneNode(true)
 	
 	const tags_list = [
@@ -13,7 +12,7 @@ export const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 		".comment__author",
 		".comment__time",
 		".comment__details",
-		".comment__form",
+		".form",
 		".comment__body",
 		"[name='comment_owner']",
 		"[name='comment_owner_depth']",
@@ -37,13 +36,11 @@ export const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 	//id_tag.textContent = `${obj.id} --- depth: ${depth}` //service for testing
 	id_tag.textContent = obj.id
 	author_tag.textContent = obj.author
-	//time_tag.setAttribute("data-timestamp", obj.time)
 	time_tag.textContent = new Date(parseInt(obj.time)).toLocaleString()
 	body_tag.textContent = obj.body
 	owner_h_tag.value = obj.id
 	owner_depth_h_tag.value = depth
 	root_tag.id = `comment_${obj.id}`
-	//root_tag.classList.add(`comment_depth_${depth}`)
 	form_tag.id = `form_id_${obj.id}`
 	slot_tag.id = `slot_id_${obj.id}`
 	
@@ -72,3 +69,5 @@ export const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 		comments_tag.appendChild(template_tag_content)
 	}
 }
+
+export default build_html_func
