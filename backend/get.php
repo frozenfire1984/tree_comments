@@ -10,7 +10,7 @@ try {
 
     if ($result) {
         $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        sleep(1);
+        sleep(2); //simulate network delay
         $data = array(
             'comments' => $rows
         );

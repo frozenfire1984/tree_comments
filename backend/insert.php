@@ -26,9 +26,9 @@ try {
     $sql = "INSERT INTO comments (id, owner, author, body, time) VALUES (NULL, NULLIF('$owner',''), '$author', '$body', '$time')";
     $result = mysqli_query($link, $sql);
 
-    if ($result) {
-        sleep(1);
+    sleep(2); //simulate network delay
 
+    if ($result) {
         $data = array(
             'id' => mysqli_insert_id($link)
         );
@@ -37,7 +37,6 @@ try {
     } else {
         throw new Exception("insert to bd failed!");
     }
-    
 
 } catch (Exception $e) {
     $data_error = array(

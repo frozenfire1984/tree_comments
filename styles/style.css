@@ -9,34 +9,46 @@
   align-items: flex-start;
   gap: 10px;
   flex-wrap: wrap;
-  max-width: 500px;
+  max-width: 600px;
   padding-top: 5px;
 }
-.form .input:required:invalid ~ .submit {
-  pointer-events: none;
-  opacity: 0.5;
-}
 .form .input_author {
-  flex-grow: 1;
+  flex: 1 1 auto;
 }
 .form .input_body {
-  flex-grow: 2;
-  height: 60px;
+  flex: 3 1 auto;
+  height: 70px;
   resize: none;
 }
+.form .input_body:required:invalid ~ .submit {
+  opacity: 0.2;
+  pointer-events: none;
+  user-select: none;
+}
+.form .submit {
+  cursor: pointer;
+}
 .form.form_main {
-  max-width: 700px;
+  max-width: 800px;
 }
 .form.form_main .input, .form.form_main .submit {
   font-size: 17px;
 }
+.form.form_main .input_body {
+  height: 100px;
+}
+.form.form_main .status {
+  margin-top: 10px;
+}
 
 .status {
-  margin-top: 5px;
   transition: opacity 1s linear;
 }
 .status.status_sus {
   color: green;
+}
+.status.status_upd {
+  color: blue;
 }
 .status.status_err {
   color: red;
@@ -45,14 +57,14 @@
   display: none;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
 :root {
-  --margin_delta: 25px;
   --color-new: #04a400;
   --color-update: #0077ff;
+  --color-error: #f00;
+}
+
+button {
+  border-radius: revert;
 }
 
 body {
@@ -66,30 +78,38 @@ article > h1:first-child {
 }
 
 .comment {
-  position: relative;
-  display: grid;
-  grid-template-columns: max-content max-content 1fr;
-  grid-template-areas: "id author time" "body body body" "details details details" "status status status" "slot slot slot";
-  row-gap: 5px;
-  column-gap: 15px;
-  padding-block: 5px;
   border: 1px #cccccc solid;
   padding: 10px;
-  transition: all 1s linear;
+  /*&:hover {
+      position: relative;
+      border-color: hsl(0, 0%, 0%);
+  }*/
+}
+.comment .comment__inner {
+  display: grid;
+  grid-template-columns: max-content max-content max-content 1fr min-content;
+  grid-template-areas: "id author time time time" "body body body body edit" "details details details details details" "status status status edited-status edited-status";
+  row-gap: 5px;
+  column-gap: 15px;
+  margin: -10px;
+  padding: 10px 10px 0 10px;
+  outline: 1px transparent solid;
+  transition: all 0.5s linear;
+}
+.comment .comment__inner_new {
+  outline-color: var(--color-new);
+  box-shadow: inset var(--color-new) 0 0 3px 3px;
+}
+.comment .comment__inner_updated {
+  outline-color: var(--color-update);
+  box-shadow: inset var(--color-update) 0 0 3px 3px;
+}
+.comment .comment__inner_error {
+  outline-color: var(--color-error);
+  box-shadow: inset var(--color-error) 0 0 3px 3px;
 }
 .comment ~ .comment {
   margin-top: -1px;
-}
-.comment.comment_new {
-  border-color: var(--color-new);
-  box-shadow: inset var(--color-new) 0 0 3px 3px;
-}
-.comment.comment_updated {
-  border-color: var(--color-update);
-  box-shadow: inset var(--color-update) 0 0 3px 3px;
-}
-.comment .comment {
-  padding-left: clamp(5px, 5%, 30px);
 }
 .comment [class*=icon-] {
   opacity: 0.5;
@@ -107,14 +127,68 @@ article > h1:first-child {
   grid-area: time;
   font-style: italic;
 }
-.comment .comment__body {
+.comment .comment__form-edit {
+  display: contents;
+}
+.comment .comment__form-edit_editing ~ .comment__details {
+  opacity: 0.2;
+  pointer-events: none;
+  user-select: none;
+}
+.comment .comment__form-edit_editing .comment__body {
+  display: none;
+}
+.comment .comment__form-edit_editing .comment__input-edit, .comment .comment__form-edit_editing .comment__btn-update {
+  display: initial;
+}
+.comment .comment__form-edit_editing .comment__btn-edit .icon-cross {
+  display: initial;
+}
+.comment .comment__form-edit_editing .comment__btn-edit .icon-pencil {
+  display: none;
+}
+.comment .comment__body-holder {
   grid-area: body;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   padding: 7px 5px;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 5px;
 }
+.comment .comment__body {
+  flex: 1 1 auto;
+}
+.comment .comment__input-edit {
+  display: none;
+  width: 100%;
+  resize: none;
+}
+.comment .comment__input-edit:required:invalid ~ .comment__btn-update {
+  opacity: 0.2;
+  pointer-events: none;
+  user-select: none;
+}
+.comment .comment__btn-update {
+  display: none;
+  cursor: pointer;
+}
+.comment .comment__btn-edit-holder {
+  grid-area: edit;
+}
+.comment .comment__btn-edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  cursor: pointer;
+}
+.comment .comment__btn-edit .icon-cross {
+  display: none;
+}
 .comment .comment__details {
   grid-area: details;
+  margin-bottom: 5px;
 }
 .comment .comment__details[open] .comment__details-summary-title_opened {
   display: initial;
@@ -132,9 +206,18 @@ article > h1:first-child {
 }
 .comment .status {
   grid-area: status;
+  align-self: center;
 }
-.comment .comment__slot {
-  grid-area: slot;
+.comment .comment__edited-status {
+  grid-area: edited-status;
+  justify-self: end;
+  align-self: center;
+  font-size: 0.9em;
+  font-style: italic;
+  color: gray;
+}
+.comment .comment__slot > .comment:first-child {
+  margin-top: 15px;
 }
 .comment .comment__slot:empty {
   display: none;

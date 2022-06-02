@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
-  <link rel="stylesheet" href="vendors/icomoon/style.css"/>
+  <link type="text/css" href="vendors/reset.css" rel="stylesheet"/>
+  <link type="text/css" href="vendors/icomoon/style.css" rel="stylesheet"/>
   <link type="text/css" href="styles/style.css" rel="stylesheet"/>
 </head>
 <body>
@@ -19,24 +20,25 @@
     quibusdam quis.</p>
 </article>
 
+<hr/>
+
 <div id="comments"></div>
 
 <div class="form-wrapper">
   <form id="form-main" class="form form_main " action="">
     <input
       name="comment_author"
-      class="input input_author form-main__input"
+      class="input input_author"
       type="text"
       placeholder="your name"
-      maxlength="30"
+      autocomplete="off"
     />
     <textarea
       name="comment_value"
-      class="input input_body form-main__input"
+      class="input input_body"
       placeholder="your comment"
-      maxlength="100"
-      required></textarea>
-
+      required
+    ></textarea>
     <button
       class="submit form-main__submit"
       type="submit"
@@ -47,48 +49,88 @@
 
 <template id="template_comments">
   <div class="comment">
-    <div class="comment__id-holder">
-      <span class="comment__id-title">#</span>
-      <span class="comment__id"></span>
-    </div>
-    <div class="comment__author-holder">
-      <i class="icon-user"></i>
-      <span class="comment__author"></span>
-    </div>
-    <div class="comment__time-holder">
-      <i class="icon-clock"></i>
-      <span class="comment__time"></span>
-    </div>
-    <div class="comment__body"></div>
-    <details class="comment__details">
-      <summary class="comment__details-summary">
-        <span class="comment__details-summary-title comment__details-summary-title_closed">Reply</span>
-        <span class="comment__details-summary-title comment__details-summary-title_opened">Cancel reply</span>
-      </summary>
-      <form class="form" action="">
-        <input
-          name="comment_author"
-          class="input input_author"
-          type="text"
-          placeholder="your name"
-          maxlength="30"
-        />
-        <textarea
-          name="comment_value"
-          class="input input_body"
-          placeholder="your comment"
-          maxlength="100"
-          required
-        ></textarea>
-        <input name="comment_owner" value="" type="hidden"/>
-        <input name="comment_owner_depth" value="" type="hidden"/>
-        <button class="submit" type="submit">reply</button>
+    <div class="comment__inner">
+      <div class="comment__id-holder">
+        <span class="comment__id-title">#</span>
+        <span class="comment__id"></span>
+      </div>
+      <div class="comment__author-holder">
+        <i class="icon-user"></i>
+        <span class="comment__author"></span>
+      </div>
+      <div class="comment__time-holder">
+        <i class="icon-clock"></i>
+        <span class="comment__time"></span>
+      </div>
+
+      <form class="comment__form-edit">
+        <div class="comment__body-holder">
+          <div class="comment__body"></div>
+          <textarea
+            name="comment_value_editing"
+            class="comment__input-edit"
+            required
+          ></textarea>
+          <button type="submit" class="comment__btn-update">Update</button>
+          <input name="comment_id-for-edit" value="" type="hidden"/>
+        </div>
+
+        <div class="comment__btn-edit-holder">
+          <button class="comment__btn-edit">
+            <i class="icon icon-pencil"></i>
+            <i class="icon icon-cross"></i>
+          </button>
+        </div>
       </form>
-    </details>
-    <div class="status"></div>
+
+      <details class="comment__details">
+        <summary class="comment__details-summary">
+          <span class="comment__details-summary-title comment__details-summary-title_closed">Reply</span>
+          <span class="comment__details-summary-title comment__details-summary-title_opened">Cancel reply</span>
+        </summary>
+        <form class="form">
+          <input
+            name="comment_author"
+            class="input input_author"
+            type="text"
+            placeholder="your name"
+            autocomplete="off"
+          />
+          <textarea
+            name="comment_value"
+            class="input input_body"
+            placeholder="your comment"
+            required
+          ></textarea>
+          <input name="comment_owner" value="" type="hidden"/>
+          <input name="comment_owner_depth" value="" type="hidden"/>
+          <button class="submit" type="submit">reply</button>
+        </form>
+      </details>
+
+      <div class="status"></div>
+      <div class="comment__edited-status"></div>
+    </div>
     <div class="comment__slot"></div>
   </div>
 </template>
+
+<!--this use for fast complete text inputs for testing-->
+<datalist id="testing_datalist">
+  <option value="Dana White">
+  <option value="John Jones">
+  <option value="Connor McGregor">
+  <option value="Dustin Poirier">
+  <option value="Nate Diaz">
+  <option value="José Aldo">
+  <option value="Max Holloway">
+  <option value="Joe Rogan">
+  <option value="Frank Fertitta">
+  <option value="Lorenzo Fertitta">
+  <option value="Kamaru Usman">
+  <option value="Tyson Fury">
+</datalist>
+
 <script src="js/script.js" type="module"></script>
 </body>
 </html>

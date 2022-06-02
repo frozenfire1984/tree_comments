@@ -1,13 +1,13 @@
-import {backend_url_base} from './global_vars.js'
+import {comments_tag, backend_url_base, timeout_status_opacity, timeout_status_clear} from './_global_params.js'
 import build_html_func from './build_html.js'
 
 const send_comment_func = (e, mode) => {
 	e.preventDefault()
 	
 	const form_tag = e.currentTarget
-	const timeout_opacity = 2000
-	const timeout_hide = 3000
-	
+	const input_author_tag = form_tag.querySelector(".input_author")
+	const input_comment_tag = form_tag.querySelector(".input_body")
+	const btn_submit_tag = form_tag.querySelector(".submit")
 	let status_tag
 	
 	if (mode.mode === "tree") {
@@ -31,10 +31,15 @@ const send_comment_func = (e, mode) => {
 		payload.set("comment_owner", "")
 	}
 	
+	//for debug
 	/*payload.forEach((item, key) => {
 		console.log(`payload key: ${key}`)
 		console.log(`payload value: ${item}`)
 	})*/
+	
+	input_author_tag.disabled = true
+	input_comment_tag.disabled = true
+	btn_submit_tag.disabled = true
 	
 	const send_data = fetch(`${backend_url_base}/insert.php`, {
 			method: "POST",
@@ -52,7 +57,11 @@ const send_comment_func = (e, mode) => {
 		.then((data) => {
 			if (data.id) {
 				status_tag.classList.add("status_sus")
-				status_tag.textContent = "commend send successfully"
+				status_tag.textContent = "comment sent successfully"
+				
+				input_author_tag.disabled = false
+				input_comment_tag.disabled = false
+				btn_submit_tag.disabled = false
 				
 				const data_for_output = {
 					id: data.id,
@@ -63,7 +72,13 @@ const send_comment_func = (e, mode) => {
 				}
 				
 				if (mode.mode === "primary") {
+					if (comments_tag.querySelector(":scope > .status")) {
+						comments_tag.querySelector(":scope > .status").remove()
+					}
 					build_html_func(data_for_output, 1, null, true)
+					form_tag.scrollIntoView({
+						behavior: 'smooth'
+					});
 				}
 				
 				if (mode.mode === "tree") {
@@ -76,28 +91,34 @@ const send_comment_func = (e, mode) => {
 				
 				setTimeout(() => {
 					status_tag.style.opacity = 0
-				}, timeout_opacity)
+				}, timeout_status_opacity)
+				
 				setTimeout(() => {
-					
 					status_tag.classList.remove("status_sus")
 					status_tag.textContent = ""
-				}, timeout_hide)
+				}, timeout_status_clear)
 				return
 			}
 			
 			throw new Error(data.error)
 		})
 		.catch((err) => {
+			input_author_tag.disabled = false
+			input_comment_tag.disabled = false
+			btn_submit_tag.disabled = false
+			
 			console.error(err)
-			status_tag.classList.add("comment__status_err")
+			status_tag.classList.add("status_err")
 			status_tag.textContent = err
+			
 			setTimeout(() => {
 				status_tag.style.opacity = 0
-			}, timeout_opacity)
+			}, timeout_status_opacity)
+			
 			setTimeout(() => {
-				status_tag.classList.remove("comment__status_err")
+				status_tag.classList.remove("status_err")
 				status_tag.textContent = ""
-			}, timeout_hide)
+			}, timeout_status_clear)
 		})
 }
 

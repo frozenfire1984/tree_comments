@@ -1,14 +1,16 @@
+@import "mixins";
 @import "form";
 @import "status";
 
-*,*::before,*::after {
-    box-sizing: border-box;
-}
-
 :root {
-    --margin_delta: 25px;
     --color-new: #04a400;
     --color-update: #0077ff;
+    --color-error: #f00;
+
+}
+
+button {
+    border-radius: revert;
 }
 
 body {
@@ -22,38 +24,47 @@ article > h1:first-child {
 }
 
 .comment {
-    position: relative;
-    display: grid;
-    grid-template-columns: max-content max-content 1fr;
-    grid-template-areas:
-    "id author time"
-    "body body body"
-    "details details details"
-    "status status status"
-    "slot slot slot";
-    row-gap: 5px;
-    column-gap: 15px;
-    padding-block: 5px;
     border: 1px hsl(0, 0%, 80%) solid;
     padding: 10px;
-    transition: all 1s linear;
+
+    /*&:hover {
+        position: relative;
+        border-color: hsl(0, 0%, 0%);
+    }*/
+
+    & &__inner {
+        display: grid;
+        grid-template-columns: max-content max-content max-content 1fr min-content;
+        grid-template-areas:
+        "id author time time time"
+        "body body body body edit"
+        "details details details details details"
+        "status status status edited-status edited-status";
+        row-gap: 5px;
+        column-gap: 15px;
+        margin: -10px;
+        padding: 10px 10px 0 10px;
+        outline: 1px transparent solid;
+        transition: all .5s linear;
+
+        &_new {
+            outline-color: var(--color-new);
+            box-shadow: inset var(--color-new) 0 0 3px 3px;
+        }
+
+        &_updated {
+            outline-color: var(--color-update);
+            box-shadow: inset var(--color-update) 0 0 3px 3px;
+        }
+
+        &_error {
+            outline-color: var(--color-error);
+            box-shadow: inset var(--color-error) 0 0 3px 3px;
+        }
+    }
 
     ~ .comment {
         margin-top: -1px;
-    }
-
-    &#{&}_new {
-        border-color: var(--color-new);
-        box-shadow: inset var(--color-new) 0 0 3px 3px;
-    }
-
-    &#{&}_updated {
-        border-color: var(--color-update);
-        box-shadow: inset var(--color-update) 0 0 3px 3px;
-    }
-
-    & & {
-        padding-left: clamp(5px, 5%, 30px);
     }
 
     [class*="icon-"] {
@@ -76,15 +87,82 @@ article > h1:first-child {
         font-style: italic;
     }
 
-    & &__body {
+    & &__form-edit {
+        display: contents;
+
+        &_editing {
+            ~ .comment__details {
+                @include disabled
+            }
+
+            .comment__body {
+                display: none;
+            }
+
+            .comment__input-edit, .comment__btn-update {
+                display: initial;
+            }
+
+            .comment__btn-edit {
+                .icon-cross {
+                    display: initial;
+                }
+
+                .icon-pencil {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    & &__body-holder {
         grid-area: body;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
         padding: 7px 5px;
         background-color: hsla(0, 0%, 0%, .05);
         border-radius: 5px;
     }
 
+    .comment__body {
+        flex: 1 1 auto;
+    }
+
+    .comment__input-edit {
+        display: none;
+        width: 100%;
+        resize: none;
+
+        &:required:invalid ~ .comment__btn-update {
+            @include disabled
+        }
+    }
+
+    .comment__btn-update {
+        display: none;
+        cursor: pointer;
+    }
+
+    & &__btn-edit-holder {
+        grid-area: edit;
+    }
+
+    & &__btn-edit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 25px;
+        cursor: pointer;
+
+        .icon-cross {
+            display: none;
+        }
+    }
+
     & &__details {
         grid-area: details;
+        margin-bottom: 5px;
 
         &[open] {
             .comment__details-summary-title_opened {
@@ -103,16 +181,28 @@ article > h1:first-child {
         font-size: .9em;
     }
 
-    .comment__details-summary-title_opened {
+    & &__details-summary-title_opened {
         display: none;
     }
 
     .status {
         grid-area: status;
+        align-self: center;
+    }
+
+    .comment__edited-status {
+        grid-area: edited-status;
+        justify-self: end;
+        align-self: center;
+        font-size: 0.9em;
+        font-style: italic;
+        color: hsl(0, 0%, 50%);
     }
 
     & &__slot {
-        grid-area: slot;
+        > .comment:first-child {
+            margin-top: 15px;
+        }
 
         &:empty {
             display: none;
