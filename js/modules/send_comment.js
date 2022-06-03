@@ -1,12 +1,17 @@
-import {comments_tag, backend_url_base, timeout_status_opacity, timeout_status_clear} from './_global_params.js'
-import build_html_func from './build_html.js'
+import {
+	backend_url_base, 
+	timeout_status_opacity, 
+	timeout_status_clear
+} from './_global_params.js'
 
-const send_comment_func = (e, mode) => {
+import build_html_method from './build_html.js'
+
+const send_comment_method = (e, mode) => {
 	e.preventDefault()
-	
+	const output_tag = document.querySelector("#comments")
 	const form_tag = e.currentTarget
 	const input_author_tag = form_tag.querySelector(".input_author")
-	const input_comment_tag = form_tag.querySelector(".input_body")
+	const textarea_msg_tag = form_tag.querySelector(".textarea_msg")
 	const btn_submit_tag = form_tag.querySelector(".submit")
 	let status_tag
 	
@@ -27,8 +32,8 @@ const send_comment_func = (e, mode) => {
 		payload.set("comment_author", "anonimus")
 	}
 	
-	if (!payload.has("comment_owner")) {
-		payload.set("comment_owner", "")
+	if (!payload.has("comment_id")) {
+		payload.set("comment_id", "")
 	}
 	
 	//for debug
@@ -37,9 +42,8 @@ const send_comment_func = (e, mode) => {
 		console.log(`payload value: ${item}`)
 	})*/
 	
-	input_author_tag.disabled = true
-	input_comment_tag.disabled = true
-	btn_submit_tag.disabled = true
+	const ctrls_tags_list = [input_author_tag, textarea_msg_tag, btn_submit_tag]
+	ctrls_tags_list.forEach(tag => tag.disabled = true)
 	
 	const send_data = fetch(`${backend_url_base}/insert.php`, {
 			method: "POST",
@@ -59,30 +63,26 @@ const send_comment_func = (e, mode) => {
 				status_tag.classList.add("status_sus")
 				status_tag.textContent = "comment sent successfully"
 				
-				input_author_tag.disabled = false
-				input_comment_tag.disabled = false
-				btn_submit_tag.disabled = false
-				
-				const data_for_output = {
+				const output_data = {
 					id: data.id,
 					author: payload.get("comment_author"),
 					body: payload.get("comment_value"),
-					owner: payload.get("comment_owner"),
+					owner: payload.get("comment_id"),
 					time: payload.get("time"),
 				}
 				
 				if (mode.mode === "primary") {
-					if (comments_tag.querySelector(":scope > .status")) {
-						comments_tag.querySelector(":scope > .status").remove()
+					if (output_tag.querySelector(":scope > .status")) {
+						output_tag.querySelector(":scope > .status").remove()
 					}
-					build_html_func(data_for_output, 1, null, true)
+					build_html_method(output_data, 1, null, true)
 					form_tag.scrollIntoView({
 						behavior: 'smooth'
 					});
 				}
 				
 				if (mode.mode === "tree") {
-					build_html_func(data_for_output, parseInt(payload.get("comment_owner_depth")) + 1, payload.get("comment_owner"), true)
+					build_html_method(output_data, parseInt(payload.get("comment_depth")) + 1, payload.get("comment_id"), true)
 				}
 				
 				input_tags.forEach((tag) => {
@@ -103,10 +103,6 @@ const send_comment_func = (e, mode) => {
 			throw new Error(data.error)
 		})
 		.catch((err) => {
-			input_author_tag.disabled = false
-			input_comment_tag.disabled = false
-			btn_submit_tag.disabled = false
-			
 			console.error(err)
 			status_tag.classList.add("status_err")
 			status_tag.textContent = err
@@ -120,6 +116,9 @@ const send_comment_func = (e, mode) => {
 				status_tag.textContent = ""
 			}, timeout_status_clear)
 		})
+		.finally(() => {
+			ctrls_tags_list.forEach(tag => tag.disabled = false)
+		})
 }
 
-export default send_comment_func
+export default send_comment_method

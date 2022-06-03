@@ -3,6 +3,10 @@
   margin-top: 20px;
   padding: 10px 5px;
 }
+.form-wrapper .status {
+  margin-top: 10px;
+  text-align: center;
+}
 
 .form {
   display: flex;
@@ -15,12 +19,12 @@
 .form .input_author {
   flex: 1 1 auto;
 }
-.form .input_body {
+.form .textarea_msg {
   flex: 3 1 auto;
   height: 70px;
   resize: none;
 }
-.form .input_body:required:invalid ~ .submit {
+.form .textarea_msg:required:invalid ~ .submit {
   opacity: 0.2;
   pointer-events: none;
   user-select: none;
@@ -34,15 +38,14 @@
 .form.form_main .input, .form.form_main .submit {
   font-size: 17px;
 }
-.form.form_main .input_body {
+.form.form_main .textarea_msg {
   height: 100px;
-}
-.form.form_main .status {
-  margin-top: 10px;
 }
 
 .status {
   transition: opacity 1s linear;
+  font-style: italic;
+  color: gray;
 }
 .status.status_sus {
   color: green;
@@ -77,13 +80,13 @@ article > h1:first-child {
   margin-top: 0;
 }
 
+#comments > .status {
+  text-align: center;
+}
+
 .comment {
   border: 1px #cccccc solid;
   padding: 10px;
-  /*&:hover {
-      position: relative;
-      border-color: hsl(0, 0%, 0%);
-  }*/
 }
 .comment .comment__inner {
   display: grid;

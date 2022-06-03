@@ -35,7 +35,7 @@
     />
     <textarea
       name="comment_value"
-      class="input input_body"
+      class="input textarea_msg"
       placeholder="your comment"
       required
     ></textarea>
@@ -72,7 +72,7 @@
             required
           ></textarea>
           <button type="submit" class="comment__btn-update">Update</button>
-          <input name="comment_id-for-edit" value="" type="hidden"/>
+          <input name="comment_id" value="" type="hidden"/>
         </div>
 
         <div class="comment__btn-edit-holder">
@@ -98,12 +98,12 @@
           />
           <textarea
             name="comment_value"
-            class="input input_body"
+            class="input textarea_msg"
             placeholder="your comment"
             required
           ></textarea>
-          <input name="comment_owner" value="" type="hidden"/>
-          <input name="comment_owner_depth" value="" type="hidden"/>
+          <input name="comment_id" value="" type="hidden"/>
+          <input name="comment_depth" value="" type="hidden"/>
           <button class="submit" type="submit">reply</button>
         </form>
       </details>

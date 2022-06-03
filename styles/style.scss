@@ -6,7 +6,6 @@
     --color-new: #04a400;
     --color-update: #0077ff;
     --color-error: #f00;
-
 }
 
 button {
@@ -23,14 +22,13 @@ article > h1:first-child {
     margin-top: 0;
 }
 
+#comments > .status {
+    text-align: center;
+}
+
 .comment {
     border: 1px hsl(0, 0%, 80%) solid;
     padding: 10px;
-
-    /*&:hover {
-        position: relative;
-        border-color: hsl(0, 0%, 0%);
-    }*/
 
     & &__inner {
         display: grid;

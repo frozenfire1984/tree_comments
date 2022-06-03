@@ -2,6 +2,11 @@
   min-height: 150px;
   margin-top: 20px;
   padding: 10px 5px;
+
+  .status {
+    margin-top: 10px;
+    text-align: center;
+  }
 }
 
 .form {
@@ -16,7 +21,7 @@
     flex: 1 1 auto;
   }
 
-  .input_body {
+  .textarea_msg {
     flex: 3 1 auto;
     height: 70px;
     resize: none;
@@ -37,12 +42,8 @@
       font-size: 17px;
     }
 
-    .input_body {
+    .textarea_msg {
       height: 100px;
-    }
-
-    .status {
-      margin-top: 10px;
     }
   }
 }

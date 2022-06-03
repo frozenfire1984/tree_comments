@@ -1,77 +1,65 @@
-import {comments_tag, max_depth, timeout_comment_highlight, max_length_letters_author, max_length_letters_comment, testing} from './_global_params.js'
-import send_comment_func from './send_comment.js'
-import update_comment_func from './update_comment.js'
-import open_edit_func from './open_edit.js'
-import {autocomplete_textarea_func, update_textarea_func} from "./_testing_utils.js";
+import {
+	max_depth,
+	timeout_comment_highlight,
+	max_length_letters_author,
+	max_length_letters_comment,
+	testing
+} from './_global_params.js'
 
-const build_html_func = (obj, depth, owner_id, dynamic = false) => {
-	const template_tag_content = document.querySelector("#template_comments").content.cloneNode(true)
+import send_comment_method from './send_comment.js'
+import update_comment_method from './update_comment.js'
+import open_edit_method from './open_edit.js'
+import {autocomplete_textarea_method, update_textarea_method} from "./_testing_utils.js";
+
+const build_html_method = (data, depth, owner_id, dynamic = false) => {
+	const output_tag = document.querySelector("#comments")
+	const tmpl_cont = document.querySelector("#template_comments").content.cloneNode(true)
+	const root_tag = tmpl_cont.querySelector(".comment")
+	const root_inner_tag = tmpl_cont.querySelector(".comment__inner")
 	
-	const tags_list = [
-		".comment",
-		".comment__inner",
-		".comment__id",
-		".comment__author",
-		".comment__time",
-		".comment__details",
-		".form",
-		".input_author",
-		".input_body",
-		".comment__form-edit",
-		".comment__body",
-		".comment__btn-edit",
-		".comment__input-edit",
-		"[name='comment_id-for-edit']",
-		"[name='comment_owner']",
-		"[name='comment_owner_depth']",
-		".comment__edited-status",
-		".comment__slot"
-	]
+	//comment primary
+	const id_tag = tmpl_cont.querySelector(".comment__id")
+	const author_tag = tmpl_cont.querySelector(".comment__author")
+	const time_tag = tmpl_cont.querySelector(".comment__time")
+	const body_tag = tmpl_cont.querySelector(".comment__body")
 	
-	const [
-		root_tag,
-		root_inner_tag,
-		id_tag,
-		author_tag,
-		time_tag,
-		details_tag,
-		form_tag,
-		input_author_tag,
-		textarea_tag,
-		form_edit_tag,
-		body_tag,
-		btn_edit_tag,
-		textarea_edit_tag,
-		id_for_edit_h_tag,
-		owner_h_tag,
-		owner_depth_h_tag,
-		edited_status_tag,
-		slot_tag
-	] = tags_list.map(tag => {
-		return template_tag_content.querySelector(tag)
+	//comment controls
+	const details_tag = tmpl_cont.querySelector(".comment__details")
+	const form_tag = tmpl_cont.querySelector(".form")
+	const input_author_tag = tmpl_cont.querySelector(".input_author")
+	const textarea_msg_tag = tmpl_cont.querySelector(".textarea_msg")
+	const	id_hidden_tags = tmpl_cont.querySelectorAll("[name='comment_id']")
+	const	depth_hidden_tag = tmpl_cont.querySelector("[name='comment_depth']")
+	
+	//comment update
+	const form_edit_tag = tmpl_cont.querySelector(".comment__form-edit")
+	const btn_edit_tag = tmpl_cont.querySelector(".comment__btn-edit")
+	const textarea_edit_tag = tmpl_cont.querySelector(".comment__input-edit")
+	const	edited_status_tag = tmpl_cont.querySelector(".comment__edited-status")
+	
+	const	slot_tag = tmpl_cont.querySelector(".comment__slot")
+	
+	root_tag.id = `comment_${data.id}`
+	id_tag.textContent = data.id
+	author_tag.textContent = data.author
+	time_tag.textContent = new Date(parseInt(data.time)).toLocaleString()
+	body_tag.textContent = data.body
+	input_author_tag.setAttribute("maxlength", max_length_letters_author)
+	textarea_msg_tag.setAttribute("maxlength", max_length_letters_comment)
+	
+	id_hidden_tags.forEach(tag => {
+		tag.value = data.id
 	})
 	
-	//id_tag.textContent = `${obj.id} --- depth: ${depth}` //service for testing
-	id_tag.textContent = obj.id
-	author_tag.textContent = obj.author
-	time_tag.textContent = new Date(parseInt(obj.time)).toLocaleString()
-	body_tag.textContent = obj.body
-	textarea_edit_tag.textContent = obj.body
-	id_for_edit_h_tag.value = obj.id
-	owner_h_tag.value = obj.id
-	owner_depth_h_tag.value = depth
-	root_tag.id = `comment_${obj.id}`
-	form_tag.id = `form_id_${obj.id}`
-	input_author_tag.setAttribute("maxlength", max_length_letters_author)
-	
-	textarea_tag.setAttribute("maxlength", max_length_letters_comment)
+	depth_hidden_tag.value = depth
+	textarea_edit_tag.textContent = data.body
 	textarea_edit_tag.setAttribute("maxlength", max_length_letters_comment)
 	
-	if (obj.time_updated) {
-		edited_status_tag.textContent = `edited ${new Date(parseInt(obj.time_updated)).toLocaleString()}`
+	if (data.time_updated) {
+		edited_status_tag.textContent = `edited ${new Date(parseInt(data.time_updated)).toLocaleString()}`
 	}
 	
-	slot_tag.id = `slot_id_${obj.id}`
+	slot_tag.id = `slot_id_${data.id}`
 	
 	if (testing) {
 		input_author_tag.setAttribute("list", "testing_datalist")
@@ -79,14 +67,14 @@ const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 		//this using for fast update textareas while edit comment for testing
 		textarea_edit_tag.addEventListener("focus",
 			(e) => {
-				update_textarea_func(e)
+				update_textarea_method(e)
 			}
 		)
 		
 		//this using for fast complete textareas for testing
-		textarea_tag.addEventListener("focus",
+		textarea_msg_tag.addEventListener("focus",
 			(e) => {
-				autocomplete_textarea_func(e)
+				autocomplete_textarea_method(e)
 			}
 		)
 	}
@@ -96,16 +84,16 @@ const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 	} else {
 		form_tag.addEventListener("submit",
 			(e) => {
-				send_comment_func(e, {mode: "tree"})
+				send_comment_method(e, {mode: "tree"})
 			}
 		)
 	}
 	
 	if (depth > 1) {
-		const owner_slot_tag = document.querySelector(`#slot_id_${owner_id}`)
-		owner_slot_tag.appendChild(template_tag_content)
+		const parent_slot_tag = document.querySelector(`#slot_id_${owner_id}`)
+		parent_slot_tag.appendChild(tmpl_cont)
 	} else {
-		comments_tag.appendChild(template_tag_content)
+		output_tag.appendChild(tmpl_cont)
 	}
 	
 	if (dynamic) {
@@ -117,15 +105,15 @@ const build_html_func = (obj, depth, owner_id, dynamic = false) => {
 	
 	btn_edit_tag.addEventListener("click",
 		(e) => {
-			open_edit_func(e)
+			open_edit_method(e)
 		}
 	)
 	
 	form_edit_tag.addEventListener("submit",
 		(e) => {
-			update_comment_func(e)
+			update_comment_method(e)
 		}
 	)
 }
 
-export default build_html_func
+export default build_html_method

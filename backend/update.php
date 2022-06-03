@@ -4,8 +4,8 @@ header('Content-type: application/json; charset=utf-8');
 
 try {
     
-    if (isset($_POST["comment_id-for-edit"])) {
-        $id = $_POST["comment_id-for-edit"];
+    if (isset($_POST["comment_id"])) {
+        $id = $_POST["comment_id"];
     }
     
     $body = "";

@@ -3,8 +3,8 @@ header("Access-Control-Allow-Origin: *");
 header('Content-type: application/json; charset=utf-8');
 
 try {
-    if (isset($_POST["comment_owner"])) {
-        $owner = $_POST["comment_owner"];
+    if (isset($_POST["comment_id"])) {
+        $owner = $_POST["comment_id"];
     }
 
     $author = "anonimus";

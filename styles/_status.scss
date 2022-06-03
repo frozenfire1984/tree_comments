@@ -1,5 +1,7 @@
 .status {
   transition: opacity 1s linear;
+  font-style: italic;
+  color: gray;
 
   &#{&}_sus {
     color: green;

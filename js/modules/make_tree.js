@@ -1,6 +1,6 @@
-import build_html_func from './build_html.js'
+import build_html_method from './build_html.js'
 
-const make_tree_func = (obj) => {
+const make_tree_method = (obj) => {
 	let queue = [null]
 	let comments = JSON.parse(JSON.stringify(obj))
 	comments.sort((a, b) => a.time - b.time);
@@ -11,7 +11,7 @@ const make_tree_func = (obj) => {
 		
 		if (nested_comments.length) {
 			let current = nested_comments[0]
-			build_html_func(current, queue.length, last_in_queue)
+			build_html_method(current, queue.length, last_in_queue)
 			queue.push(current.id)
 			comments.splice(comments.findIndex(item => item.id === current.id), 1)
 			//comments = comments.filter(item => item.id !== current.id) //for testing, because while debug the comments arrayhandled by splice method don't show correctly
@@ -30,4 +30,4 @@ const make_tree_func = (obj) => {
 	}
 }
 
-export default make_tree_func
+export default make_tree_method

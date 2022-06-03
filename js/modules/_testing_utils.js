@@ -1,5 +1,5 @@
 //this script using for fast complete textareas for testing
-const autocomplete_textarea_func = (e) => {
+const autocomplete_textarea_method = (e) => {
 	const array_phrases = [
 		"Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
 		"Delectus deserunt est, illo iste nemo reprehenderit saepe vero voluptates?",
@@ -17,8 +17,8 @@ const autocomplete_textarea_func = (e) => {
 }
 
 //this script using for fast update textareas while edit comment for testing
-const update_textarea_func = (e) => {
+const update_textarea_method = (e) => {
 	e.currentTarget.value = `${e.currentTarget.value} updated`
 }
 
-export {autocomplete_textarea_func, update_textarea_func}
+export {autocomplete_textarea_method, update_textarea_method}
