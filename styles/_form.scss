@@ -3,7 +3,7 @@
   margin-top: 20px;
   padding: 10px 5px;
 
-  .status {
+  .status-holder {
     margin-top: 10px;
     text-align: center;
   }
@@ -14,8 +14,6 @@
   align-items: flex-start;
   gap: 10px;
   flex-wrap: wrap;
-  max-width: 600px;
-  padding-top: 5px;
 
   .input_author {
     flex: 1 1 auto;
@@ -23,12 +21,7 @@
 
   .textarea_msg {
     flex: 3 1 auto;
-    height: 70px;
     resize: none;
-
-    &:required:invalid ~ .submit {
-      @include disabled
-    }
   }
 
   .submit {
@@ -36,8 +29,6 @@
   }
 
   &#{&}_main {
-    max-width: 800px;
-
     .input, .submit {
       font-size: 17px;
     }

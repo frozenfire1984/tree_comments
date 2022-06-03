@@ -1,6 +1,7 @@
 @import "mixins";
 @import "form";
 @import "status";
+@import "btn";
 
 :root {
     --color-new: #04a400;
@@ -32,12 +33,12 @@ article > h1:first-child {
 
     & &__inner {
         display: grid;
-        grid-template-columns: max-content max-content max-content 1fr min-content;
+        grid-template-columns: max-content max-content max-content 1fr max-content min-content;
         grid-template-areas:
-        "id author time time time"
-        "body body body body edit"
-        "details details details details details"
-        "status status status edited-status edited-status";
+        "id author time time time time"
+        "body body body body body edit"
+        "reply reply reply reply btn-reply ."
+        "edited-status edited-status edited-status edited-status edited-status edited-status";
         row-gap: 5px;
         column-gap: 15px;
         margin: -10px;
@@ -69,6 +70,7 @@ article > h1:first-child {
         opacity: .5;
     }
 
+    //primary
     & &__id-holder {
         grid-area: id;
         align-self: start;
@@ -85,20 +87,39 @@ article > h1:first-child {
         font-style: italic;
     }
 
+    & &__body-holder {
+        grid-area: body;
+        position: relative;
+        display: flex;
+        gap: 10px;
+        padding: 9px 7px;
+        background-color: hsla(0, 0%, 0%, .05);
+        border-radius: 5px;
+        min-height: 0;
+        transition: min-height .5s linear;
+    }
+
+    & &__body {
+        transition: opacity .5s linear;
+        border: 1px transparent solid;
+    }
+
+    //update
     & &__form-edit {
         display: contents;
 
         &_editing {
-            ~ .comment__details {
-                @include disabled
+            .comment__body-holder {
+                min-height: 66px;
             }
 
             .comment__body {
-                display: none;
+                opacity: 0;
             }
 
-            .comment__input-edit, .comment__btn-update {
-                display: initial;
+            .comment__update-wrapper {
+                pointer-events: auto;
+                opacity: 1;
             }
 
             .comment__btn-edit {
@@ -113,33 +134,29 @@ article > h1:first-child {
         }
     }
 
-    & &__body-holder {
-        grid-area: body;
+    & &__update-wrapper {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         display: flex;
-        align-items: flex-start;
         gap: 10px;
-        padding: 7px 5px;
-        background-color: hsla(0, 0%, 0%, .05);
-        border-radius: 5px;
+        opacity: 0;
+        padding: inherit;
+        transition: opacity .5s linear;
+        pointer-events: none;
     }
 
-    .comment__body {
-        flex: 1 1 auto;
-    }
-
-    .comment__input-edit {
-        display: none;
-        width: 100%;
+    & &__textarea-edit {
+        flex: 1 0 auto;
+        padding: 0;
         resize: none;
-
-        &:required:invalid ~ .comment__btn-update {
-            @include disabled
-        }
+        line-height: 24px;
     }
 
-    .comment__btn-update {
-        display: none;
-        cursor: pointer;
+    & &__btn-update {
+        align-self: start;
     }
 
     & &__btn-edit-holder {
@@ -151,53 +168,92 @@ article > h1:first-child {
         justify-content: center;
         align-items: center;
         height: 25px;
-        cursor: pointer;
 
         .icon-cross {
             display: none;
         }
     }
 
-    & &__details {
-        grid-area: details;
-        margin-bottom: 5px;
+    //reply
+    & &__btn-reply {
+        grid-area: btn-reply;
+        justify-self: end;
+        align-self: start;
 
-        &[open] {
-            .comment__details-summary-title_opened {
-                display: initial;
-            }
+        .btn__content_state_expanded {
+            display: none;
+        }
 
-            .comment__details-summary-title_closed {
-                display: none;
+        @at-root {
+            .comment .comment__inner_expanded .comment__btn-reply {
+
+                .btn__content_state_expanded {
+                    display: initial;
+                }
+
+                .btn__content_state_default {
+                    display: none;
+                }
             }
         }
     }
 
-    & &__details-summary {
-        width: fit-content;
-        cursor: pointer;
-        font-size: .9em;
+    & &__form-reply-holder {
+        grid-area: reply;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        height: 0;
+        opacity: 0;
+        transition: all .5s linear;
+
+        > .form {
+            flex: 1 0 auto;
+
+            .textarea_msg {
+                align-self: stretch;
+            }
+        }
+
+        @at-root {
+            .comment .comment__inner_expanded .comment__form-reply-holder {
+                height: 100px;
+                opacity: 1;
+            }
+        }
     }
 
-    & &__details-summary-title_opened {
-        display: none;
+    //status
+    .status-holder {
+        grid-area: reply;
+        align-self: end;
     }
 
-    .status {
-        grid-area: status;
-        align-self: center;
+    .comment__inner_limited .status-holder {
+        grid-area: edited-status;
     }
 
     .comment__edited-status {
         grid-area: edited-status;
         justify-self: end;
         align-self: center;
+        display: flex;
+        align-items: end;
+        overflow: hidden;
+        height: 24px;
         font-size: 0.9em;
         font-style: italic;
+        font-variant-numeric: tabular-nums;
         color: hsl(0, 0%, 50%);
+        font-weight: 300;
+        transition: height .5s linear;
+
+        &:empty {
+            height: 0;
+        }
     }
 
-    & &__slot {
+    & &__child {
         > .comment:first-child {
             margin-top: 15px;
         }

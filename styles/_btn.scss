@@ -1,0 +1,24 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 30px;
+  min-width: 32px;
+  cursor: pointer;
+
+  &[disabled] {
+    cursor: default;
+  }
+
+  & &__content {
+    display: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+    gap: inherit;
+  }
+
+  .icon-cross {
+    font-size: .8em;
+  }
+}

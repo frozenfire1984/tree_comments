@@ -24,8 +24,8 @@
 
 <div id="comments"></div>
 
-<div class="form-wrapper">
-  <form id="form-main" class="form form_main " action="">
+<div class="form-wrapper scope-block">
+  <form id="form-main" class="form form_main " action="" readonly>
     <input
       name="comment_author"
       class="input input_author"
@@ -40,16 +40,17 @@
       required
     ></textarea>
     <button
-      class="submit form-main__submit"
+      class="btn submit form-main__submit"
       type="submit"
-      id="form-main_submit">send comment</button>
+      disabled
+      id="form-main_submit">Send comment</button>
   </form>
-  <div class="status"></div>
+  <div class="status-holder"></div>
 </div>
 
 <template id="template_comments">
   <div class="comment">
-    <div class="comment__inner">
+    <div class="comment__inner scope-block">
       <div class="comment__id-holder">
         <span class="comment__id-title">#</span>
         <span class="comment__id"></span>
@@ -63,31 +64,42 @@
         <span class="comment__time"></span>
       </div>
 
-      <form class="comment__form-edit">
+      <form class="comment__form-edit comment__form-edit_editing_">
         <div class="comment__body-holder">
           <div class="comment__body"></div>
-          <textarea
+
+          <div class="comment__update-wrapper">
+            <textarea
             name="comment_value_editing"
-            class="comment__input-edit"
+            class="comment__textarea-edit"
             required
-          ></textarea>
-          <button type="submit" class="comment__btn-update">Update</button>
+            ></textarea>
+            <button type="submit" class="btn comment__btn-update">Update</button>
+          </div>
+
           <input name="comment_id" value="" type="hidden"/>
         </div>
 
         <div class="comment__btn-edit-holder">
-          <button class="comment__btn-edit">
+          <button class="btn comment__btn-edit">
             <i class="icon icon-pencil"></i>
             <i class="icon icon-cross"></i>
           </button>
         </div>
       </form>
 
-      <details class="comment__details">
-        <summary class="comment__details-summary">
-          <span class="comment__details-summary-title comment__details-summary-title_closed">Reply</span>
-          <span class="comment__details-summary-title comment__details-summary-title_opened">Cancel reply</span>
-        </summary>
+      <button class="btn comment__btn-reply">
+        <span class="btn__content btn__content_state_default">
+          <i class="icon icon-undo2"></i>
+          Reply
+        </span>
+        <span class="btn__content btn__content_state_expanded">
+          <i class="icon icon-cross"></i>
+          Cancel
+        </span>
+      </button>
+
+      <div class="comment__form-reply-holder">
         <form class="form">
           <input
             name="comment_author"
@@ -104,14 +116,16 @@
           ></textarea>
           <input name="comment_id" value="" type="hidden"/>
           <input name="comment_depth" value="" type="hidden"/>
-          <button class="submit" type="submit">reply</button>
+          <button class="btn submit" type="submit" disabled>
+            <i class="icon icon-undo2"></i>
+            Reply
+          </button>
         </form>
-      </details>
-
-      <div class="status"></div>
+      </div>
+      <div class="status-holder"></div>
       <div class="comment__edited-status"></div>
     </div>
-    <div class="comment__slot"></div>
+    <div class="comment__child"></div>
   </div>
 </template>
 

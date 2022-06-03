@@ -8,14 +8,20 @@ import {
 const update_comment_fun = (e) => {
 	e.preventDefault()
 	const form_tag = e.currentTarget
-	const body_tag = form_tag.querySelector(".comment__body")
-	const btn_edit_tag = form_tag.querySelector(".comment__btn-edit")
-	const textarea_edit_tag = form_tag.querySelector(".comment__input-edit")
-	const btn_update_tag = form_tag.querySelector(".comment__btn-update")
-	const root_tag = form_tag.closest(".comment")
-	const root_inner_tag = root_tag.querySelector(".comment__inner")
-	const status_tag = root_tag.querySelector(".status")
+	const root_tag = form_tag.closest(".scope-block")
+	const body_tag = root_tag.querySelector(".comment__body")
+	const btn_edit_tag = root_tag.querySelector(".comment__btn-edit")
+	const textarea_edit_tag = root_tag.querySelector(".comment__textarea-edit")
+	const btn_update_tag = root_tag.querySelector(".comment__btn-update")
+	const btn_reply_tag = root_tag.querySelector(".comment__btn-reply")
+	const status_holder_tag = root_tag.querySelector(".status-holder")
 	const edited_status_tag = root_tag.querySelector(".comment__edited-status")
+	
+	status_holder_tag.innerHTML = ""
+	const status_tag = document.createElement("span")
+	status_tag.classList.add("status")
+	status_tag.textContent = "...updating..."
+	status_holder_tag.append(status_tag)
 	
 	const payload = new FormData(form_tag)
 	payload.append("time_updated", new Date().getTime().toString())
@@ -25,12 +31,11 @@ const update_comment_fun = (e) => {
 		console.log(`payload key: ${key}`)
 		console.log(`payload value: ${item}`)
 	})*/
-	
-	status_tag.style.removeProperty("opacity")
+
 	status_tag.textContent = "...updating..."
 	
-	const ctrls_tags_list = [btn_edit_tag, textarea_edit_tag, btn_update_tag]
-	ctrls_tags_list.forEach(tag => tag.disabled = true)
+	const ctrls_tags_list = [btn_edit_tag, textarea_edit_tag, btn_update_tag, btn_reply_tag ? btn_reply_tag : null]
+	ctrls_tags_list.forEach(tag => tag ? tag.disabled = true : null)
 	
 	const send_data = fetch(`${backend_url_base}/update.php`, {
 		method: "POST",
@@ -53,9 +58,9 @@ const update_comment_fun = (e) => {
 			edited_status_tag.textContent = `edited ${new Date(parseInt(payload.get("time_updated"))).toLocaleString()}`
 			form_tag.classList.remove("comment__form-edit_editing")
 			
-			root_inner_tag.classList.add("comment__inner_updated")
+			root_tag.classList.add("comment__inner_updated")
 			setTimeout(() => {
-				root_inner_tag.classList.remove("comment__inner_updated")
+				root_tag.classList.remove("comment__inner_updated")
 			}, timeout_comment_highlight)
 			
 			setTimeout(() => {
@@ -75,9 +80,9 @@ const update_comment_fun = (e) => {
 		status_tag.classList.add("status_err")
 		status_tag.textContent = err
 		
-		root_inner_tag.classList.add("comment__inner_error")
+		root_tag.classList.add("comment__inner_error")
 		setTimeout(() => {
-			root_inner_tag.classList.remove("comment__inner_error")
+			root_tag.classList.remove("comment__inner_error")
 		}, timeout_comment_highlight)
 		
 		setTimeout(() => {
@@ -90,7 +95,7 @@ const update_comment_fun = (e) => {
 		}, timeout_status_clear)
 	})
 	.finally(() => {
-		ctrls_tags_list.forEach(tag => tag.disabled = false)
+		ctrls_tags_list.forEach(tag => tag ? tag.disabled = false : null)
 	})
 }
 

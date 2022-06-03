@@ -24,12 +24,6 @@ form_main_tag.addEventListener("submit", (e) => {
 	send_comment_method(e, {mode: "primary"})
 })
 
-input_author_tag.setAttribute("maxlength", max_length_letters_author)
-textarea_msg_tag.setAttribute("maxlength", max_length_letters_comment)
-
-const ctrls_tags_list = [input_author_tag, textarea_msg_tag, btn_submit_tag]
-ctrls_tags_list.forEach(tag => tag.disabled = true)
-
 if (testing) {
 	//this use for fast complete text inputs for testing
 	input_author_tag.setAttribute("list", "testing_datalist")
@@ -41,6 +35,24 @@ if (testing) {
 		}
 	)
 }
+
+const toggle_disable_submit_method = (e) => {
+	btn_submit_tag.disabled = !e.currentTarget.value.length;
+}
+
+textarea_msg_tag.addEventListener("input", (e) => {
+	toggle_disable_submit_method(e)
+})
+
+textarea_msg_tag.addEventListener("focus", (e) => {
+	toggle_disable_submit_method(e)
+})
+
+input_author_tag.setAttribute("maxlength", max_length_letters_author)
+textarea_msg_tag.setAttribute("maxlength", max_length_letters_comment)
+
+const ctrls_tags_list = [input_author_tag, textarea_msg_tag, !btn_submit_tag.disabled ? btn_submit_tag : null]
+ctrls_tags_list.forEach(tag => tag ? tag.disabled = true : null)
 
 const get_data = fetch(`${backend_url_base}/get.php`)
 
@@ -71,5 +83,6 @@ get_data
 		status_tag.textContent = err
 	})
 	.finally(() => {
-		ctrls_tags_list.forEach(tag => tag.disabled = false)
+		ctrls_tags_list.forEach(tag => tag ? tag.disabled = false: null)
+		
 	})

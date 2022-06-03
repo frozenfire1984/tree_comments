@@ -3,7 +3,7 @@
   margin-top: 20px;
   padding: 10px 5px;
 }
-.form-wrapper .status {
+.form-wrapper .status-holder {
   margin-top: 10px;
   text-align: center;
 }
@@ -13,27 +13,16 @@
   align-items: flex-start;
   gap: 10px;
   flex-wrap: wrap;
-  max-width: 600px;
-  padding-top: 5px;
 }
 .form .input_author {
   flex: 1 1 auto;
 }
 .form .textarea_msg {
   flex: 3 1 auto;
-  height: 70px;
   resize: none;
-}
-.form .textarea_msg:required:invalid ~ .submit {
-  opacity: 0.2;
-  pointer-events: none;
-  user-select: none;
 }
 .form .submit {
   cursor: pointer;
-}
-.form.form_main {
-  max-width: 800px;
 }
 .form.form_main .input, .form.form_main .submit {
   font-size: 17px;
@@ -58,6 +47,28 @@
 }
 .status:empty {
   display: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 30px;
+  min-width: 32px;
+  cursor: pointer;
+}
+.btn[disabled] {
+  cursor: default;
+}
+.btn .btn__content {
+  display: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  gap: inherit;
+}
+.btn .icon-cross {
+  font-size: 0.8em;
 }
 
 :root {
@@ -90,8 +101,8 @@ article > h1:first-child {
 }
 .comment .comment__inner {
   display: grid;
-  grid-template-columns: max-content max-content max-content 1fr min-content;
-  grid-template-areas: "id author time time time" "body body body body edit" "details details details details details" "status status status edited-status edited-status";
+  grid-template-columns: max-content max-content max-content 1fr max-content min-content;
+  grid-template-areas: "id author time time time time" "body body body body body edit" "reply reply reply reply btn-reply ." "edited-status edited-status edited-status edited-status edited-status edited-status";
   row-gap: 5px;
   column-gap: 15px;
   margin: -10px;
@@ -130,19 +141,33 @@ article > h1:first-child {
   grid-area: time;
   font-style: italic;
 }
+.comment .comment__body-holder {
+  grid-area: body;
+  position: relative;
+  display: flex;
+  gap: 10px;
+  padding: 9px 7px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  min-height: 0;
+  transition: min-height 0.5s linear;
+}
+.comment .comment__body {
+  transition: opacity 0.5s linear;
+  border: 1px transparent solid;
+}
 .comment .comment__form-edit {
   display: contents;
 }
-.comment .comment__form-edit_editing ~ .comment__details {
-  opacity: 0.2;
-  pointer-events: none;
-  user-select: none;
+.comment .comment__form-edit_editing .comment__body-holder {
+  min-height: 66px;
 }
 .comment .comment__form-edit_editing .comment__body {
-  display: none;
+  opacity: 0;
 }
-.comment .comment__form-edit_editing .comment__input-edit, .comment .comment__form-edit_editing .comment__btn-update {
-  display: initial;
+.comment .comment__form-edit_editing .comment__update-wrapper {
+  pointer-events: auto;
+  opacity: 1;
 }
 .comment .comment__form-edit_editing .comment__btn-edit .icon-cross {
   display: initial;
@@ -150,31 +175,27 @@ article > h1:first-child {
 .comment .comment__form-edit_editing .comment__btn-edit .icon-pencil {
   display: none;
 }
-.comment .comment__body-holder {
-  grid-area: body;
+.comment .comment__update-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
-  align-items: flex-start;
   gap: 10px;
-  padding: 7px 5px;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 5px;
-}
-.comment .comment__body {
-  flex: 1 1 auto;
-}
-.comment .comment__input-edit {
-  display: none;
-  width: 100%;
-  resize: none;
-}
-.comment .comment__input-edit:required:invalid ~ .comment__btn-update {
-  opacity: 0.2;
+  opacity: 0;
+  padding: inherit;
+  transition: opacity 0.5s linear;
   pointer-events: none;
-  user-select: none;
+}
+.comment .comment__textarea-edit {
+  flex: 1 0 auto;
+  padding: 0;
+  resize: none;
+  line-height: 24px;
 }
 .comment .comment__btn-update {
-  display: none;
-  cursor: pointer;
+  align-self: start;
 }
 .comment .comment__btn-edit-holder {
   grid-area: edit;
@@ -184,45 +205,74 @@ article > h1:first-child {
   justify-content: center;
   align-items: center;
   height: 25px;
-  cursor: pointer;
 }
 .comment .comment__btn-edit .icon-cross {
   display: none;
 }
-.comment .comment__details {
-  grid-area: details;
-  margin-bottom: 5px;
+.comment .comment__btn-reply {
+  grid-area: btn-reply;
+  justify-self: end;
+  align-self: start;
 }
-.comment .comment__details[open] .comment__details-summary-title_opened {
+.comment .comment__btn-reply .btn__content_state_expanded {
+  display: none;
+}
+.comment .comment__inner_expanded .comment__btn-reply .btn__content_state_expanded {
   display: initial;
 }
-.comment .comment__details[open] .comment__details-summary-title_closed {
+.comment .comment__inner_expanded .comment__btn-reply .btn__content_state_default {
   display: none;
 }
-.comment .comment__details-summary {
-  width: fit-content;
-  cursor: pointer;
-  font-size: 0.9em;
+
+.comment .comment__form-reply-holder {
+  grid-area: reply;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  transition: all 0.5s linear;
 }
-.comment .comment__details-summary-title_opened {
-  display: none;
+.comment .comment__form-reply-holder > .form {
+  flex: 1 0 auto;
 }
-.comment .status {
-  grid-area: status;
-  align-self: center;
+.comment .comment__form-reply-holder > .form .textarea_msg {
+  align-self: stretch;
+}
+.comment .comment__inner_expanded .comment__form-reply-holder {
+  height: 100px;
+  opacity: 1;
+}
+
+.comment .status-holder {
+  grid-area: reply;
+  align-self: end;
+}
+.comment .comment__inner_limited .status-holder {
+  grid-area: edited-status;
 }
 .comment .comment__edited-status {
   grid-area: edited-status;
   justify-self: end;
   align-self: center;
+  display: flex;
+  align-items: end;
+  overflow: hidden;
+  height: 24px;
   font-size: 0.9em;
   font-style: italic;
+  font-variant-numeric: tabular-nums;
   color: gray;
+  font-weight: 300;
+  transition: height 0.5s linear;
 }
-.comment .comment__slot > .comment:first-child {
+.comment .comment__edited-status:empty {
+  height: 0;
+}
+.comment .comment__child > .comment:first-child {
   margin-top: 15px;
 }
-.comment .comment__slot:empty {
+.comment .comment__child:empty {
   display: none;
 }
 

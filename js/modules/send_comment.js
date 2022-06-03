@@ -10,21 +10,19 @@ const send_comment_method = (e, mode) => {
 	e.preventDefault()
 	const output_tag = document.querySelector("#comments")
 	const form_tag = e.currentTarget
-	const input_author_tag = form_tag.querySelector(".input_author")
-	const textarea_msg_tag = form_tag.querySelector(".textarea_msg")
-	const btn_submit_tag = form_tag.querySelector(".submit")
-	let status_tag
+	const root_tag = form_tag.closest(".scope-block")
+	const input_author_tag = root_tag.querySelector(".input_author")
+	const textarea_msg_tag = root_tag.querySelector(".textarea_msg")
+	const btn_submit_tag = root_tag.querySelector(".submit")
+	const btn_edit_tag = root_tag.querySelector(".comment__btn-edit")
+	const btn_reply_tag = root_tag.querySelector(".comment__btn-reply")
+	const status_holder_tag = root_tag.querySelector(".status-holder")
 	
-	if (mode.mode === "tree") {
-		status_tag = form_tag.closest(".comment").querySelector(".status")
-	} else {
-		status_tag = form_tag.closest(".form-wrapper").querySelector(".status")
-	}
-	
-	const input_tags = form_tag.querySelectorAll(".input")
-	
-	status_tag.style.removeProperty("opacity")
+	status_holder_tag.innerHTML = ""
+	const status_tag = document.createElement("span")
+	status_tag.classList.add("status")
 	status_tag.textContent = "...sending..."
+	status_holder_tag.append(status_tag)
 	
 	const payload = new FormData(form_tag)
 	payload.append("time", new Date().getTime().toString())
@@ -42,8 +40,15 @@ const send_comment_method = (e, mode) => {
 		console.log(`payload value: ${item}`)
 	})*/
 	
-	const ctrls_tags_list = [input_author_tag, textarea_msg_tag, btn_submit_tag]
-	ctrls_tags_list.forEach(tag => tag.disabled = true)
+	btn_submit_tag.disabled = true
+	
+	const ctrls_tags_list = [
+		input_author_tag,
+		textarea_msg_tag,
+		btn_reply_tag ? btn_reply_tag : null,
+		btn_edit_tag ? btn_edit_tag : null
+	]
+	ctrls_tags_list.forEach(tag => tag ? tag.disabled = true : null)
 	
 	const send_data = fetch(`${backend_url_base}/insert.php`, {
 			method: "POST",
@@ -72,9 +77,6 @@ const send_comment_method = (e, mode) => {
 				}
 				
 				if (mode.mode === "primary") {
-					if (output_tag.querySelector(":scope > .status")) {
-						output_tag.querySelector(":scope > .status").remove()
-					}
 					build_html_method(output_data, 1, null, true)
 					form_tag.scrollIntoView({
 						behavior: 'smooth'
@@ -83,9 +85,10 @@ const send_comment_method = (e, mode) => {
 				
 				if (mode.mode === "tree") {
 					build_html_method(output_data, parseInt(payload.get("comment_depth")) + 1, payload.get("comment_id"), true)
+					root_tag.classList.remove("comment__inner_expanded")
 				}
 				
-				input_tags.forEach((tag) => {
+				[input_author_tag, textarea_msg_tag].forEach((tag) => {
 					tag.value = ""
 				})
 				
@@ -97,6 +100,7 @@ const send_comment_method = (e, mode) => {
 					status_tag.classList.remove("status_sus")
 					status_tag.textContent = ""
 				}, timeout_status_clear)
+				
 				return
 			}
 			
@@ -117,7 +121,7 @@ const send_comment_method = (e, mode) => {
 			}, timeout_status_clear)
 		})
 		.finally(() => {
-			ctrls_tags_list.forEach(tag => tag.disabled = false)
+			ctrls_tags_list.forEach(tag => tag ? tag.disabled = false : null)
 		})
 }
 

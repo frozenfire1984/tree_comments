@@ -8,7 +8,7 @@ import {
 
 import send_comment_method from './send_comment.js'
 import update_comment_method from './update_comment.js'
-import open_edit_method from './open_edit.js'
+import {toggle_reply_method, toggle_update_method} from "./togglers.js"
 import {autocomplete_textarea_method, update_textarea_method} from "./_testing_utils.js";
 
 const build_html_method = (data, depth, owner_id, dynamic = false) => {
@@ -24,7 +24,9 @@ const build_html_method = (data, depth, owner_id, dynamic = false) => {
 	const body_tag = tmpl_cont.querySelector(".comment__body")
 	
 	//comment controls
-	const details_tag = tmpl_cont.querySelector(".comment__details")
+	const btn_reply_tag = tmpl_cont.querySelector(".comment__btn-reply")
+	const btn_submit_tag = tmpl_cont.querySelector(".submit")
+	const reply_tag = tmpl_cont.querySelector(".comment__form-reply-holder")
 	const form_tag = tmpl_cont.querySelector(".form")
 	const input_author_tag = tmpl_cont.querySelector(".input_author")
 	const textarea_msg_tag = tmpl_cont.querySelector(".textarea_msg")
@@ -34,16 +36,23 @@ const build_html_method = (data, depth, owner_id, dynamic = false) => {
 	//comment update
 	const form_edit_tag = tmpl_cont.querySelector(".comment__form-edit")
 	const btn_edit_tag = tmpl_cont.querySelector(".comment__btn-edit")
-	const textarea_edit_tag = tmpl_cont.querySelector(".comment__input-edit")
+	const btn_update_tag = tmpl_cont.querySelector(".comment__btn-update")
+	const textarea_edit_tag = tmpl_cont.querySelector(".comment__textarea-edit")
 	const	edited_status_tag = tmpl_cont.querySelector(".comment__edited-status")
 	
-	const	slot_tag = tmpl_cont.querySelector(".comment__slot")
+	const	child_tag = tmpl_cont.querySelector(".comment__child")
 	
 	root_tag.id = `comment_${data.id}`
+	root_inner_tag.id = `comment_inner_${data.id}`
 	id_tag.textContent = data.id
 	author_tag.textContent = data.author
 	time_tag.textContent = new Date(parseInt(data.time)).toLocaleString()
 	body_tag.textContent = data.body
+	
+	btn_reply_tag.addEventListener("click", (e) => {
+		toggle_reply_method(e)
+	})
+	
 	input_author_tag.setAttribute("maxlength", max_length_letters_author)
 	textarea_msg_tag.setAttribute("maxlength", max_length_letters_comment)
 	
@@ -59,7 +68,7 @@ const build_html_method = (data, depth, owner_id, dynamic = false) => {
 		edited_status_tag.textContent = `edited ${new Date(parseInt(data.time_updated)).toLocaleString()}`
 	}
 	
-	slot_tag.id = `slot_id_${data.id}`
+	child_tag.id = `child_id_${data.id}`
 	
 	if (testing) {
 		input_author_tag.setAttribute("list", "testing_datalist")
@@ -79,8 +88,34 @@ const build_html_method = (data, depth, owner_id, dynamic = false) => {
 		)
 	}
 	
+	const toggle_disable_reply_btn_method = (e) => {
+		btn_submit_tag.disabled = !e.currentTarget.value.length;
+	}
+	
+	textarea_msg_tag.addEventListener("input", (e) => {
+		toggle_disable_reply_btn_method(e)
+	})
+	
+	textarea_msg_tag.addEventListener("focus", (e) => {
+		toggle_disable_reply_btn_method(e)
+	})
+	
+	const toggle_disable_update_btn_method = (e) => {
+		btn_update_tag.disabled = !e.currentTarget.value.length;
+	}
+	
+	textarea_edit_tag.addEventListener("input", (e) => {
+		toggle_disable_update_btn_method(e)
+	})
+	
+	textarea_edit_tag.addEventListener("focus", (e) => {
+		toggle_disable_update_btn_method(e)
+	})
+	
 	if (depth >= max_depth) {
-		details_tag.remove()
+		btn_reply_tag.remove()
+		reply_tag.remove()
+		root_inner_tag.classList.add("comment__inner_limited")
 	} else {
 		form_tag.addEventListener("submit",
 			(e) => {
@@ -90,8 +125,8 @@ const build_html_method = (data, depth, owner_id, dynamic = false) => {
 	}
 	
 	if (depth > 1) {
-		const parent_slot_tag = document.querySelector(`#slot_id_${owner_id}`)
-		parent_slot_tag.appendChild(tmpl_cont)
+		const parent_child_tag = document.querySelector(`#child_id_${owner_id}`)
+		parent_child_tag.appendChild(tmpl_cont)
 	} else {
 		output_tag.appendChild(tmpl_cont)
 	}
@@ -105,7 +140,7 @@ const build_html_method = (data, depth, owner_id, dynamic = false) => {
 	
 	btn_edit_tag.addEventListener("click",
 		(e) => {
-			open_edit_method(e)
+			toggle_update_method(e)
 		}
 	)
 	
