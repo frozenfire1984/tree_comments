@@ -21,9 +21,6 @@
   flex: 3 1 auto;
   resize: none;
 }
-.form .submit {
-  cursor: pointer;
-}
 .form.form_main .input, .form.form_main .submit {
   font-size: 17px;
 }
@@ -96,8 +93,8 @@ article > h1:first-child {
 }
 
 .comment {
-  border: 1px #cccccc solid;
   padding: 10px;
+  border: 1px #cccccc solid;
 }
 .comment .comment__inner {
   display: grid;
@@ -146,15 +143,15 @@ article > h1:first-child {
   position: relative;
   display: flex;
   gap: 10px;
+  min-height: 0;
   padding: 9px 7px;
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 5px;
-  min-height: 0;
   transition: min-height 0.5s linear;
 }
 .comment .comment__body {
-  transition: opacity 0.5s linear;
   border: 1px transparent solid;
+  transition: opacity 0.5s linear;
 }
 .comment .comment__form-edit {
   display: contents;
@@ -183,8 +180,8 @@ article > h1:first-child {
   left: 0;
   display: flex;
   gap: 10px;
-  opacity: 0;
   padding: inherit;
+  opacity: 0;
   transition: opacity 0.5s linear;
   pointer-events: none;
 }

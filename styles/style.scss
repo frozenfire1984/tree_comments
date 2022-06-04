@@ -28,8 +28,8 @@ article > h1:first-child {
 }
 
 .comment {
-    border: 1px hsl(0, 0%, 80%) solid;
     padding: 10px;
+    border: 1px hsl(0, 0%, 80%) solid;
 
     & &__inner {
         display: grid;
@@ -92,16 +92,16 @@ article > h1:first-child {
         position: relative;
         display: flex;
         gap: 10px;
+        min-height: 0;
         padding: 9px 7px;
         background-color: hsla(0, 0%, 0%, .05);
         border-radius: 5px;
-        min-height: 0;
         transition: min-height .5s linear;
     }
 
     & &__body {
-        transition: opacity .5s linear;
         border: 1px transparent solid;
+        transition: opacity .5s linear;
     }
 
     //update
@@ -142,8 +142,8 @@ article > h1:first-child {
         left: 0;
         display: flex;
         gap: 10px;
-        opacity: 0;
         padding: inherit;
+        opacity: 0;
         transition: opacity .5s linear;
         pointer-events: none;
     }

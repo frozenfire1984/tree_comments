@@ -1,150 +1,148 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Title</title>
-  <link type="text/css" href="vendors/reset.css" rel="stylesheet"/>
-  <link type="text/css" href="vendors/icomoon/style.css" rel="stylesheet"/>
-  <link type="text/css" href="styles/style.css" rel="stylesheet"/>
+  <link type="text/css" href="vendors/reset.css" rel="stylesheet" />
+  <link type="text/css" href="vendors/icomoon/style.css" rel="stylesheet" />
+  <link type="text/css" href="styles/style.css" rel="stylesheet" />
 </head>
 <body>
 
-<article>
-  <h1>Some article</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus deserunt est, illo iste nemo reprehenderit saepe
-    vero voluptates? Ad aut commodi distinctio, magni numquam omnis quod ratione unde voluptate! Pariatur!</p>
-  <p>Atque distinctio earum, fugiat in laborum libero quis saepe. Eaque iure iusto maiores molestiae officia rerum
-    voluptates? A nulla optio pariatur recusandae soluta temporibus? At excepturi expedita officia saepe suscipit!</p>
-  <p>A, aperiam, aspernatur distinctio ducimus esse facilis incidunt, iusto natus neque numquam officia perferendis quae
-    quis reiciendis reprehenderit soluta veritatis. Adipisci asperiores distinctio dolorum ipsam, iure molestiae non
-    quibusdam quis.</p>
-</article>
+  <article>
+    <h1>Some article</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus deserunt est, illo iste nemo reprehenderit saepe
+      vero voluptates? Ad aut commodi distinctio, magni numquam omnis quod ratione unde voluptate! Pariatur!</p>
+    <p>Atque distinctio earum, fugiat in laborum libero quis saepe. Eaque iure iusto maiores molestiae officia rerum
+      voluptates? A nulla optio pariatur recusandae soluta temporibus? At excepturi expedita officia saepe suscipit!</p>
+    <p>A, aperiam, aspernatur distinctio ducimus esse facilis incidunt, iusto natus neque numquam officia perferendis quae
+      quis reiciendis reprehenderit soluta veritatis. Adipisci asperiores distinctio dolorum ipsam, iure molestiae non
+      quibusdam quis.</p>
+  </article>
 
-<hr/>
+  <hr/>
 
-<div id="comments"></div>
+  <div id="comments"></div>
 
-<div class="form-wrapper scope-block">
-  <form id="form-main" class="form form_main" action="">
-    <input
-      name="comment_author"
-      class="input input_author"
-      type="text"
-      placeholder="your name"
-      autocomplete="off"
-    />
-    <textarea
-      name="comment_value"
-      class="input textarea_msg"
-      placeholder="your comment"
-      required
-    ></textarea>
-    <button
-      class="btn submit form-main__submit"
-      type="submit"
-      disabled
-      id="form-main_submit">Send comment</button>
-  </form>
-  <div class="status-holder"></div>
-</div>
+  <div class="form-wrapper scope-block">
+    <form id="form-main" class="form form_main">
+      <input
+        name="comment_author"
+        class="input input_author"
+        type="text"
+        placeholder="your name"
+        autocomplete="off"
+      />
+      <textarea
+        name="comment_value"
+        class="input textarea_msg"
+        placeholder="your comment"
+        required
+      ></textarea>
+      <button
+        class="btn submit form-main__submit"
+        type="submit"
+        disabled
+        id="form-main_submit">Send comment</button>
+    </form>
+    <div class="status-holder"></div>
+  </div>
 
-<template id="template_comments">
-  <div class="comment">
-    <div class="comment__inner scope-block">
-      <div class="comment__id-holder">
-        <span class="comment__id-title">#</span>
-        <span class="comment__id"></span>
-      </div>
-      <div class="comment__author-holder">
-        <i class="icon-user"></i>
-        <span class="comment__author"></span>
-      </div>
-      <div class="comment__time-holder">
-        <i class="icon-clock"></i>
-        <span class="comment__time"></span>
-      </div>
+  <template id="template_comments">
+    <div class="comment">
+      <div class="comment__inner scope-block">
+        <div class="comment__id-holder">
+          <span class="comment__id-title">#</span>
+          <span class="comment__id"></span>
+        </div>
+        <div class="comment__author-holder">
+          <i class="icon-user"></i>
+          <span class="comment__author"></span>
+        </div>
+        <div class="comment__time-holder">
+          <i class="icon-clock"></i>
+          <span class="comment__time"></span>
+        </div>
 
-      <form class="comment__form-edit comment__form-edit_editing_">
-        <div class="comment__body-holder">
-          <div class="comment__body"></div>
-
-          <div class="comment__update-wrapper">
-            <textarea
-            name="comment_value_editing"
-            class="comment__textarea-edit"
-            required
-            ></textarea>
-            <button type="submit" class="btn comment__btn-update">Update</button>
+        <form class="comment__form-edit">
+          <div class="comment__body-holder">
+            <div class="comment__body"></div>
+            <div class="comment__update-wrapper">
+              <textarea
+              name="comment_value_editing"
+              class="comment__textarea-edit"
+              required
+              ></textarea>
+              <button type="submit" class="btn comment__btn-update">Update</button>
+            </div>
+            <input name="comment_id" value="" type="hidden"/>
           </div>
 
-          <input name="comment_id" value="" type="hidden"/>
-        </div>
+          <div class="comment__btn-edit-holder">
+            <button class="btn comment__btn-edit">
+              <i class="icon icon-pencil"></i>
+              <i class="icon icon-cross"></i>
+            </button>
+          </div>
+        </form>
 
-        <div class="comment__btn-edit-holder">
-          <button class="btn comment__btn-edit">
-            <i class="icon icon-pencil"></i>
-            <i class="icon icon-cross"></i>
-          </button>
-        </div>
-      </form>
-
-      <button class="btn comment__btn-reply">
-        <span class="btn__content btn__content_state_default">
-          <i class="icon icon-undo2"></i>
-          Reply
-        </span>
-        <span class="btn__content btn__content_state_expanded">
-          <i class="icon icon-cross"></i>
-          Cancel
-        </span>
-      </button>
-
-      <div class="comment__form-reply-holder">
-        <form class="form">
-          <input
-            name="comment_author"
-            class="input input_author"
-            type="text"
-            placeholder="your name"
-            autocomplete="off"
-          />
-          <textarea
-            name="comment_value"
-            class="input textarea_msg"
-            placeholder="your comment"
-            required
-          ></textarea>
-          <input name="comment_id" value="" type="hidden"/>
-          <input name="comment_depth" value="" type="hidden"/>
-          <button class="btn submit" type="submit" disabled>
+        <button class="btn comment__btn-reply">
+          <span class="btn__content btn__content_state_default">
             <i class="icon icon-undo2"></i>
             Reply
-          </button>
-        </form>
+          </span>
+          <span class="btn__content btn__content_state_expanded">
+            <i class="icon icon-cross"></i>
+            Cancel
+          </span>
+        </button>
+
+        <div class="comment__form-reply-holder">
+          <form class="form">
+            <input
+              name="comment_author"
+              class="input input_author"
+              type="text"
+              placeholder="your name"
+              autocomplete="off"
+            />
+            <textarea
+              name="comment_value"
+              class="input textarea_msg"
+              placeholder="your comment"
+              required
+            ></textarea>
+            <input name="comment_id" value="" type="hidden"/>
+            <input name="comment_depth" value="" type="hidden"/>
+            <button class="btn submit" type="submit" disabled>
+              <i class="icon icon-undo2"></i>
+              Reply
+            </button>
+          </form>
+        </div>
+        <div class="status-holder"></div>
+        <div class="comment__edited-status"></div>
       </div>
-      <div class="status-holder"></div>
-      <div class="comment__edited-status"></div>
+      <div class="comment__child"></div>
     </div>
-    <div class="comment__child"></div>
-  </div>
-</template>
+  </template>
 
-<!--this use for fast complete text inputs for testing-->
-<datalist id="testing_datalist">
-  <option value="Dana White">
-  <option value="John Jones">
-  <option value="Connor McGregor">
-  <option value="Dustin Poirier">
-  <option value="Nate Diaz">
-  <option value="José Aldo">
-  <option value="Max Holloway">
-  <option value="Joe Rogan">
-  <option value="Frank Fertitta">
-  <option value="Lorenzo Fertitta">
-  <option value="Kamaru Usman">
-  <option value="Tyson Fury">
-</datalist>
+  <!--this use for fast complete text inputs for testing-->
+  <datalist id="testing_datalist">
+    <option value="Dana White">
+    <option value="John Jones">
+    <option value="Connor McGregor">
+    <option value="Dustin Poirier">
+    <option value="Nate Diaz">
+    <option value="José Aldo">
+    <option value="Max Holloway">
+    <option value="Joe Rogan">
+    <option value="Frank Fertitta">
+    <option value="Lorenzo Fertitta">
+    <option value="Kamaru Usman">
+    <option value="Tyson Fury">
+  </datalist>
 
-<script src="js/script.js" type="module"></script>
+  <script src="js/script.js" type="module"></script>
 </body>
 </html>
