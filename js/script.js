@@ -14,7 +14,6 @@ const form_main_tag = document.querySelector("#form-main")
 const input_author_tag = form_main_tag.querySelector(".input_author")
 const textarea_msg_tag = form_main_tag.querySelector(".textarea_msg")
 const btn_submit_tag = form_main_tag.querySelector(".submit")
-
 const status_tag = document.createElement("div")
 status_tag.classList.add("status")
 status_tag.textContent = "...loading..."
@@ -75,6 +74,7 @@ get_data
 			make_tree_method(data.comments)
 			return
 		}
+		
 		throw new Error(data.error)
 	})
 	.catch((err) => {
@@ -84,5 +84,4 @@ get_data
 	})
 	.finally(() => {
 		ctrls_tags_list.forEach(tag => tag ? tag.disabled = false: null)
-		
 	})

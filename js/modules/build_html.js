@@ -128,6 +128,9 @@ const build_html_method = (data, depth, owner_id, dynamic = false) => {
 		const parent_child_tag = document.querySelector(`#child_id_${owner_id}`)
 		parent_child_tag.appendChild(tmpl_cont)
 	} else {
+		if (output_tag.querySelector(":scope > .status")) {
+			output_tag.querySelector(":scope > .status").remove()
+		}
 		output_tag.appendChild(tmpl_cont)
 	}
 	

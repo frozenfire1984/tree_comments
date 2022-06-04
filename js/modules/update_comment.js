@@ -5,7 +5,7 @@ import {
 	timeout_status_clear
 } from "./_global_params.js";
 
-const update_comment_fun = (e) => {
+const update_comment_method = (e) => {
 	e.preventDefault()
 	const form_tag = e.currentTarget
 	const root_tag = form_tag.closest(".scope-block")
@@ -43,24 +43,47 @@ const update_comment_fun = (e) => {
 	})
 	
 	send_data
-	.then(resp => {
-		return new Promise((resolve, reject) => {
-			resp.json()
-			.then((data) => resolve(data))
-			.catch((err) => reject(new Error("error while json parsing!")))
+		.then(resp => {
+			return new Promise((resolve, reject) => {
+				resp.json()
+				.then((data) => resolve(data))
+				.catch((err) => reject(new Error("error while json parsing!")))
+			})
 		})
-	})
-	.then(data => {
-		if (data.result) {
-			status_tag.classList.add("status_upd")
-			status_tag.textContent = "comment updated successfully"
-			body_tag.textContent = payload.get("comment_value_editing").toString()
-			edited_status_tag.textContent = `edited ${new Date(parseInt(payload.get("time_updated"))).toLocaleString()}`
-			form_tag.classList.remove("comment__form-edit_editing")
+		.then(data => {
+			if (data.result) {
+				status_tag.classList.add("status_upd")
+				status_tag.textContent = "comment updated successfully"
+				body_tag.textContent = payload.get("comment_value_editing").toString()
+				edited_status_tag.textContent = `edited ${new Date(parseInt(payload.get("time_updated"))).toLocaleString()}`
+				form_tag.classList.remove("comment__form-edit_editing")
+				root_tag.classList.add("comment__inner_updated")
+				
+				setTimeout(() => {
+					root_tag.classList.remove("comment__inner_updated")
+				}, timeout_comment_highlight)
+				
+				setTimeout(() => {
+					status_tag.style.opacity = 0
+				}, timeout_status_opacity)
+				
+				setTimeout(() => {
+					status_tag.classList.remove("status_upd")
+					status_tag.textContent = ""
+				}, timeout_status_clear)
+				return
+			}
 			
-			root_tag.classList.add("comment__inner_updated")
+			throw new Error(data.error)
+		})
+		.catch((err) => {
+			console.error(err)
+			status_tag.classList.add("status_err")
+			status_tag.textContent = err
+			
+			root_tag.classList.add("comment__inner_error")
 			setTimeout(() => {
-				root_tag.classList.remove("comment__inner_updated")
+				root_tag.classList.remove("comment__inner_error")
 			}, timeout_comment_highlight)
 			
 			setTimeout(() => {
@@ -68,35 +91,13 @@ const update_comment_fun = (e) => {
 			}, timeout_status_opacity)
 			
 			setTimeout(() => {
-				status_tag.classList.remove("status_upd")
+				status_tag.classList.remove("status_err")
 				status_tag.textContent = ""
 			}, timeout_status_clear)
-			return
-		}
-		throw new Error(data.error)
-	})
-	.catch((err) => {
-		console.error(err)
-		status_tag.classList.add("status_err")
-		status_tag.textContent = err
-		
-		root_tag.classList.add("comment__inner_error")
-		setTimeout(() => {
-			root_tag.classList.remove("comment__inner_error")
-		}, timeout_comment_highlight)
-		
-		setTimeout(() => {
-			status_tag.style.opacity = 0
-		}, timeout_status_opacity)
-		
-		setTimeout(() => {
-			status_tag.classList.remove("status_err")
-			status_tag.textContent = ""
-		}, timeout_status_clear)
-	})
-	.finally(() => {
-		ctrls_tags_list.forEach(tag => tag ? tag.disabled = false : null)
-	})
+		})
+		.finally(() => {
+			ctrls_tags_list.forEach(tag => tag ? tag.disabled = false : null)
+		})
 }
 
-export default update_comment_fun
+export default update_comment_method

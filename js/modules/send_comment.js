@@ -8,7 +8,6 @@ import build_html_method from './build_html.js'
 
 const send_comment_method = (e, mode) => {
 	e.preventDefault()
-	const output_tag = document.querySelector("#comments")
 	const form_tag = e.currentTarget
 	const root_tag = form_tag.closest(".scope-block")
 	const input_author_tag = root_tag.querySelector(".input_author")
